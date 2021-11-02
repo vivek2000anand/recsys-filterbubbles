@@ -38,7 +38,7 @@ transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-batch_size = 4
+batch_size = 128
 
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
@@ -66,7 +66,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 paths = []
 # Train loop
-for epoch in range(2):
+for epoch in range(10):
     # Adding the train loop
     running_loss = 0
     for i, data in enumerate(trainloader, 0):

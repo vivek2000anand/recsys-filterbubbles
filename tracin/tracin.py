@@ -1,4 +1,5 @@
 import torch
+from torch.optim import SGD
 from copy import deepcopy
 
 def save_tracin_checkpoint(model, epoch, loss, optimizer, path):
@@ -48,6 +49,8 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         criterion ([type]): [description]
         paths ([type]): [description]
     """
+    if optimizer != "SGD":
+        raise Exception("Wrong optimizer, can only use SGD")
     num_checkpoints = len(paths)
     influence = 0
     for model_index in range(num_checkpoints):
@@ -55,7 +58,8 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         # TODO add get gradients to the model
         # Load the models and get the informations
         curr_model = model()
-        curr_model, model_optimizer, model_epoch, _ = load_tracin_checkpoint(curr_model, deepcopy(optimizer), paths[model_index])
+        optimizer = SGD(curr_model.parameters(), lr=0.001, momentum=0.9)
+        curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, paths[model_index])
         lr = get_lr(model_optimizer)
         print("LR is ", lr)
         # Get source gradients 
