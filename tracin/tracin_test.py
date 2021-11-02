@@ -44,12 +44,12 @@ trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=2)
-train_subset = torch.utils.data.subset(trainset, [0, 1])
+train_subset = torch.utils.data.Subset(trainset, [0, 1])
 trainloader_subset = torch.utils.data.DataLoader(train_subset, batch_size=1, num_workers=0, shuffle=False)
 
 testset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                        download=True, transform=transform)
-test_subset = torch.utils.data.subset(testset, [0, 1])
+test_subset = torch.utils.data.Subset(testset, [0, 1])
 testloader_subset = torch.utils.data.DataLoader(test_subset, batch_size=1, num_workers=0, shuffle=False)
 
 testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
