@@ -1,5 +1,4 @@
 import torch
-from torch._C import float32
 from copy import deepcopy
 
 def save_tracin_checkpoint(model, epoch, loss, optimizer, path):
@@ -74,18 +73,6 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         val = torch.dot(torch.flatten(source_gradients, target_gradients))
         influence += val
     return influence
-
-        
-
-        
-
-
-
-
-        
-        
-
-    return 
 
 def get_lr(optimizer):
     """Gets learning rate given an optimizer
