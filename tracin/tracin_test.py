@@ -31,7 +31,7 @@ class Net(nn.Module):
         """Get gradients for tracin method. (Do not call individually)
         """
         list_params = list(self.parameters())
-        gradients = torch.cat([torch.flatten(l[i].grad) for l in list_params])
+        gradients = torch.cat([torch.flatten(l.grad) for l in list_params])
         return gradients
 
 transform = transforms.Compose(
