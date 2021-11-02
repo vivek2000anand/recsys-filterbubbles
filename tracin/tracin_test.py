@@ -28,7 +28,7 @@ class Net(nn.Module):
     def get_gradients(self):
         """Get gradients for tracin method. (Do not call individually)
         """
-
+        list_params = list(self.parameters())
         return
 
 transform = transforms.Compose(
@@ -51,4 +51,21 @@ classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 model = Net()
+
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+# Adding the train loop
+for i, data in enumerate(trainloader, 0):
+    inputs, labels = data
+    # optimizer.zero_grad()
+    outputs = model(inputs)
+    loss = criterion(outputs, labels)
+    loss.backward()
+parms = list(model.parameters())
+print("Model grads")
+print(parms[0].grad)
+print(parms[1].grad)
+
+
 print(model.parameters())
