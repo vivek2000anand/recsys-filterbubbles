@@ -5,6 +5,8 @@ import torchvision
 import torchvision.transforms as transforms
 import torch.optim as optim
 
+from tracin.tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence
+
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
@@ -29,7 +31,8 @@ class Net(nn.Module):
         """Get gradients for tracin method. (Do not call individually)
         """
         list_params = list(self.parameters())
-        return
+        gradients = torch.cat([torch.flatten(l[i].grad) for l in list_params])
+        return gradients
 
 transform = transforms.Compose(
     [transforms.ToTensor(),
@@ -41,9 +44,14 @@ trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=2)
+train_subset = torch.utils.data.subset(trainset, [0, 1])
+trainloader_subset = torch.utils.data.DataLoader(train_subset, batch_size=1, num_workers=0, shuffle=False)
 
 testset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                        download=True, transform=transform)
+test_subset = torch.utils.data.subset(testset, [0, 1])
+testloader_subset = torch.utils.data.DataLoader(test_subset, batch_size=1, num_workers=0, shuffle=False)
+
 testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
                                          shuffle=False, num_workers=2)
 
@@ -55,17 +63,36 @@ model = Net()
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-# Adding the train loop
-for i, data in enumerate(trainloader, 0):
-    inputs, labels = data
-    # optimizer.zero_grad()
-    outputs = model(inputs)
-    loss = criterion(outputs, labels)
-    loss.backward()
-parms = list(model.parameters())
-print("Model grads")
-print(parms[0].grad)
-print(parms[1].grad)
 
+paths = []
+# Train loop
+for epoch in range(2):
+    # Adding the train loop
+    running_loss = 0
+    for i, data in enumerate(trainloader, 0):
+        inputs, labels = data
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+        if i % 2000 == 1999:    # print every 2000 mini-batches
+            print('[%d, %5d] loss: %.3f' %
+                  (epoch + 1, i + 1, running_loss / 2000))
+            running_loss = 0.0
+    # Saving the tracin checkpoint
+    path = "conv_test_epoch" + str(epoch) + ".pt"
+    paths.append(path)
+    save_tracin_checkpoint(model, epoch, running_loss, optimizer, path)
 
-print(model.parameters())
+# TracIn testing
+source, source_label = next(iter(trainloader_subset))
+target, target_label = next(iter(testloader_subset))
+influence = calculate_tracin_influence(Net, source, source_label, target, target_label, optim.SGD(model.parameters(), lr=0.001, momentum=0.9), nn.CrossEntropyLoss(), paths)
+print("Influence for train 1 and test 1 is ", influence)
+
+source, source_label = next(iter(trainloader_subset))
+target, target_label = next(iter(testloader_subset))
+influence = calculate_tracin_influence(Net, source, source_label, target, target_label, optim.SGD(model.parameters(), lr=0.001, momentum=0.9), nn.CrossEntropyLoss(), paths)
+print("Influence for train 2 and test 2 is ", influence)
