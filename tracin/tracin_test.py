@@ -44,12 +44,12 @@ trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=2)
-train_subset = torch.utils.data.Subset(trainset, [0, 1])
+train_subset = torch.utils.data.Subset(trainset, [0, 1, 5, 6, 7])
 trainloader_subset = torch.utils.data.DataLoader(train_subset, batch_size=1, num_workers=0, shuffle=False)
 
 testset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                        download=True, transform=transform)
-test_subset = torch.utils.data.Subset(testset, [0, 1])
+test_subset = torch.utils.data.Subset(testset, [0, 1, 10, 6, 8])
 testloader_subset = torch.utils.data.DataLoader(test_subset, batch_size=1, num_workers=0, shuffle=False)
 
 testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
@@ -96,3 +96,18 @@ source, source_label = next(iter(trainloader_subset))
 target, target_label = next(iter(testloader_subset))
 influence = calculate_tracin_influence(Net, source, source_label, target, target_label, optim.SGD(model.parameters(), lr=0.001, momentum=0.9), nn.CrossEntropyLoss(), paths)
 print("Influence for train 2 and test 2 is ", influence)
+
+source, source_label = next(iter(trainloader_subset))
+target, target_label = next(iter(testloader_subset))
+influence = calculate_tracin_influence(Net, source, source_label, target, target_label, optim.SGD(model.parameters(), lr=0.001, momentum=0.9), nn.CrossEntropyLoss(), paths)
+print("Influence for train 5 and test 10 is ", influence)
+
+source, source_label = next(iter(trainloader_subset))
+target, target_label = next(iter(testloader_subset))
+influence = calculate_tracin_influence(Net, source, source_label, target, target_label, optim.SGD(model.parameters(), lr=0.001, momentum=0.9), nn.CrossEntropyLoss(), paths)
+print("Influence for train 6 and test 6 is ", influence)
+
+source, source_label = next(iter(trainloader_subset))
+target, target_label = next(iter(testloader_subset))
+influence = calculate_tracin_influence(Net, source, source_label, target, target_label, optim.SGD(model.parameters(), lr=0.001, momentum=0.9), nn.CrossEntropyLoss(), paths)
+print("Influence for train 7 and test 8 is ", influence)
