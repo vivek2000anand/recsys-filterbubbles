@@ -44,7 +44,7 @@ trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=2)
-train_subset = torch.utils.data.Subset(trainset, [0, 1, 5, 6, 7])
+train_subset = torch.utils.data.Subset(trainset, [0, 1, 5, 6, 999])
 trainloader_subset = torch.utils.data.DataLoader(train_subset, batch_size=1, num_workers=0, shuffle=False)
 
 testset = torchvision.datasets.CIFAR10(root='./data', train=False,
@@ -110,4 +110,4 @@ print("Influence for train 6 and test 6 is ", influence)
 source, source_label = next(iter(trainloader_subset))
 target, target_label = next(iter(testloader_subset))
 influence = calculate_tracin_influence(Net, source, source_label, target, target_label, "SGD", nn.CrossEntropyLoss(), paths)
-print("Influence for train 7 and test 8 is ", influence)
+print("Influence for train 999 and test 8 is ", influence)
