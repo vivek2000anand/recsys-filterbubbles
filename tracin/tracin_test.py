@@ -66,7 +66,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 paths = []
 # Train loop
-for epoch in range(10):
+for epoch in range(3):
     # Adding the train loop
     running_loss = 0
     for i, data in enumerate(trainloader, 0):
