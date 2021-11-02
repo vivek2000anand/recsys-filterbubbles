@@ -5,7 +5,7 @@ import torchvision
 import torchvision.transforms as transforms
 import torch.optim as optim
 
-from tracin.tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence
+from tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence
 
 class Net(nn.Module):
     def __init__(self):
