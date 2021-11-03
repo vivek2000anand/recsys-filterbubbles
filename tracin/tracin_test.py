@@ -66,7 +66,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 paths = []
 # Train loop
-for epoch in range(3):
+for epoch in range(20):
     # Adding the train loop
     running_loss = 0
     for i, data in enumerate(trainloader, 0):
@@ -91,31 +91,31 @@ testloader_subset = iter(testloader_subset)
 # TracIn testing
 source, source_label = next(trainloader_subset)
 target, target_label = next(testloader_subset)
-print("source ", source)
+# print("source ", source)
 influence = calculate_tracin_influence(Net, source, source_label, target, target_label, "SGD", nn.CrossEntropyLoss(), paths)
 print("Influence for train 1 and test 1 is ", influence)
 print("______________________________________________________________________________________________________________________")
 source, source_label = next(trainloader_subset)
 target, target_label = next(testloader_subset)
-print("source ", source)
+# print("source ", source)
 influence = calculate_tracin_influence(Net, source, source_label, target, target_label, "SGD", nn.CrossEntropyLoss(), paths)
-print("Influence for train 2 and test 2 is ", influence)
+# print("Influence for train 2 and test 2 is ", influence)
 print("______________________________________________________________________________________________________________________")
 source, source_label = next(trainloader_subset)
 target, target_label = next(testloader_subset)
-print("source ", source)
+# print("source ", source)
 influence = calculate_tracin_influence(Net, source, source_label, target, target_label, "SGD", nn.CrossEntropyLoss(), paths)
 print("Influence for train 5 and test 10 is ", influence)
 print("______________________________________________________________________________________________________________________")
 source, source_label = next(trainloader_subset)
-print("source ", source)
+# print("source ", source)
 target, target_label = next(testloader_subset)
 influence = calculate_tracin_influence(Net, source, source_label, target, target_label, "SGD", nn.CrossEntropyLoss(), paths)
 print("Influence for train 6 and test 6 is ", influence)
 print("______________________________________________________________________________________________________________________")
 source, source_label = next(trainloader_subset)
 target, target_label = next(testloader_subset)
-print("source ", source)
+# print("source ", source)
 influence = calculate_tracin_influence(Net, source, source_label, target, target_label, "SGD", nn.CrossEntropyLoss(), paths)
 print("Influence for train 999 and test 8 is ", influence)
 print("______________________________________________________________________________________________________________________")

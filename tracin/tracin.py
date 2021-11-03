@@ -57,25 +57,25 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         # TODO get the initialization ready
         # TODO add get gradients to the model
         # Load the models and get the informations
-        curr_model = model()
+        curr_model = model() 
         optimizer = SGD(curr_model.parameters(), lr=0.001, momentum=0.9)
         curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, paths[model_index])
         lr = get_lr(model_optimizer)
-        print("LR is ", lr)
+        # print("LR is ", lr)
         # Get source gradients 
         model_optimizer.zero_grad()
         source_outputs = curr_model(source)
-        print("Source outputs are ", source_outputs)
+        # print("Source outputs are ", source_outputs)
         source_loss = criterion(source_outputs, source_label)
-        print("source loss is ", source_loss)
+        # print("source loss is ", source_loss)
         source_loss.backward()
         source_gradients = curr_model.get_gradients()
         # Get target gradients
         model_optimizer.zero_grad()
         target_outputs = curr_model(target)
-        print("target outputs are ", target_outputs)
+        # print("target outputs are ", target_outputs)
         target_loss = criterion(target_outputs, target_label)
-        print("target loss is ", target_loss)
+        # print("target loss is ", target_loss)
         target_loss.backward()
         target_gradients = curr_model.get_gradients()
         # Calculate influence for this epoch. Flatten weights and dot product.
