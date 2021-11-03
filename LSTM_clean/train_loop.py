@@ -73,7 +73,7 @@ def sequence_generator(data, look_back = 50):
 
 
 # In[3] Set CUDA env
-epochs = 75
+epochs = 200
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]='0'

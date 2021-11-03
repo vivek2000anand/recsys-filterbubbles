@@ -108,7 +108,7 @@ class LSTM(nn.Module):
         print("train # = {}\ttest # = {}".format(train_num,test_num))
 
         criterion = nn.CrossEntropyLoss()
-        learning_rate = 1e-4
+        learning_rate = 1e-3
         optimizer = optim.SGD(self.parameters(), lr=learning_rate, momentum=0.9)
 
         start_time = time.time()
