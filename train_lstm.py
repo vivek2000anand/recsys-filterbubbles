@@ -1,20 +1,16 @@
+# In[1]
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import os
-import torch.optim as optim
-from os import listdir
-from os.path import isfile, join
-from tracin.tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence
+import numpy as np
 import pandas as pd
+import copy
+import os
+
+from tracin.tracin import save_tracin_checkpoint, calculate_tracin_influence, get_lr
 from LSTM_clean.utils import train_test_split, sequence_generator
 from LSTM_clean.model import LSTM
-
-curr_dir = os.getcwd()
-path = curr_dir + "/checkpoints/"
-checkpoints = [f for f in listdir(path) if isfile(join(path, f))]
-
-
+# In[3] Set CUDA env
+epochs = 150
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]='0'
@@ -55,30 +51,12 @@ test_ground_truth = {i:test[i][1] for i in range(len(test))}
 
 print("Train: {}, Test: {}".format(len(train),len(test)))
 
-train_num,test_num = len(train),len(test)
-train_labels,test_labels = [],[]
-
+# %%
+# In[6] Run LSTM
 model = LSTM(input_size=128, output_size=len(unique_items)+1, hidden_dim=64, n_layers=1, device=device).to(device)
 model.LSTM.flatten_parameters()
-
-for i in range(train_num):
-    train[i][0] = model.item_emb(torch.LongTensor(train[i][0]).to(model.device))
-    train_labels.append(train[i][1])
-train_labels = torch.LongTensor(train_labels).to(model.device)
-         
-for i in range(test_num):
-    test[i][0] = model.item_emb(torch.LongTensor(test[i][0]).to(model.device))
-    test_labels.append(test[i][1])
-test_labels = torch.LongTensor(test_labels).to(model.device)
-
-sample_source = train[0][0]
-sample_source_label = train_labels[0]
-
-sample_target = test[0][0]
-sample_target_label = test_labels[0]
-criterion = nn.CrossEntropyLoss()
-learning_rate = 5e-2
-optimizer = optim.SGD(LSTM.parameters(), lr=learning_rate, momentum=0.9)
-
-influence = calculate_tracin_influence(LSTM, sample_source, sample_source_label, sample_target, sample_target_label, checkpoints)
-print(influence)
+print("Model is ", model)
+print("Training and testing")
+original_prediction = model.traintest(train=train,test=test,epochs = epochs)
+print("Finished")
+# %%
