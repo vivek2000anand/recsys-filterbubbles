@@ -58,6 +58,7 @@ class LSTM(nn.Module):
             [type]: 1D torch tensor of gradients
         """
         list_params = list(self.parameters())
+        print("list_params \n",list_params)
         gradients = torch.cat([torch.flatten(l.grad) for l in list_params])
         return gradients
 
