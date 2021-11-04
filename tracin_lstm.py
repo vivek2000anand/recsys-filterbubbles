@@ -75,11 +75,11 @@ for i in range(test_num):
 test_labels = torch.LongTensor(test_labels).to(model.device)
 
 print("train 0 0 ", train[0][0])
-sample_source = train[0][0]
-sample_source_label = train_labels[0]
+sample_source = torch.stack([train[i][0] for i in range(2)], dim=0)
+sample_source_label = train_labels[:2]
 
-sample_target = torch.stack([test[0][0]], dim=0)
-sample_target_label = test_labels[0]
+sample_target = torch.stack([test[i][0] for i in range(2)], dim=0)
+sample_target_label = test_labels[:2]
 criterion = nn.CrossEntropyLoss()
 learning_rate = 5e-2
 optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
