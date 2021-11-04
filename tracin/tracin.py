@@ -79,9 +79,8 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         model_optimizer.zero_grad()
         target_outputs, _ = curr_model.forward(target)
         # print("target outputs are ", target_outputs)
-        target_loss = criterion(target_outputs[0:1], target_label)
+        criterion(target_outputs[0:1], target_label).backward(retain_graph=True)
         # print("target loss is ", target_loss)
-        target_loss.backward(retain_graph=True)
         target_gradients = curr_model.get_gradients()
         # Calculate influence for this epoch. Flatten weights and dot product.
         val = torch.dot(source_gradients, target_gradients)
