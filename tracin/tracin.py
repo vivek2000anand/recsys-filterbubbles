@@ -60,7 +60,7 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     # optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     for model_index in range(num_checkpoints):
         print("in it")
-        influence += helper_influence(model, deepcopy(source), deepcopy(source_label), deepcopy(target), deepcopy(target_label), paths[model_index])
+        influence += helper_influence(model, source.detach().clone(), source_label.detach().clone(), target.detach().clone(), target_label.detach().clone(), paths[model_index])
     return influence
 
 def helper_influence(model, source, source_label, target, target_label, path):
