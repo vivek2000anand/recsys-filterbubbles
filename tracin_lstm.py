@@ -21,8 +21,8 @@ print("Device is ", device)
 
 # In[4] Load data (ex: wikipedia [user, item, timestamp])
 print("Loading data")
-path = "../data/"
-raw_data = pd.read_csv(path + "twitch100k.csv", sep=',', header=0)
+path = os.getcwd()
+raw_data = pd.read_csv(path + "/data/twitch100k.csv", sep=',', header=0)
 print(raw_data.head())
 streamer_community_dict = pd.Series(raw_data['community'].values, index=raw_data['streamer_name']).to_dict()
 data = raw_data[['user_id', 'streamer_name', 'stop_time']]
