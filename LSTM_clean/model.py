@@ -142,8 +142,8 @@ class LSTM(nn.Module):
                 print("Epoch {}\tTrain Loss: {}\tTest MRR: {}\tTest Recall@10: {}\tElapsed time: {}".format(epoch, train_loss/train_num,test_MRR,test_HITS, time.time() - start_time))
                 start_time = time.time()
             if epoch % 10 == 0:
-                path = os.getcwd()
-                fname = "/data/.lstm_checkpoint_epoch" + str(epoch) + ".pt"
+                path = os.path.dirname(os.getcwd())
+                fname = path + "/checkpoints/.lstm_checkpoint_epoch" + str(epoch) + ".pt"
                 save_tracin_checkpoint(self, epoch, train_loss, optimizer, fname)
         
         return test_prediction
