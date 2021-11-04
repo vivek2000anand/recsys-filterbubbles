@@ -58,14 +58,14 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     # curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
     # curr_model.LSTM.flatten_parameters()
     # optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
-    for model_index in range(num_checkpoints):
-        print("in it")
-        influence += helper_influence(model, source.detach().clone(), source_label.detach().clone(), target.detach().clone(), target_label.detach().clone(), paths[model_index])
-    return influence
-
-def helper_influence(model, source, source_label, target, target_label, path):
     curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
     curr_model.LSTM.flatten_parameters()
+    for model_index in range(num_checkpoints):
+        print("in it")
+        influence += helper_influence(curr_model, source.detach().clone(), source_label.detach().clone(), target.detach().clone(), target_label.detach().clone(), paths[model_index])
+    return influence
+
+def helper_influence(curr_model, source, source_label, target, target_label, path):
     optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, path)
     lr = get_lr(model_optimizer)
