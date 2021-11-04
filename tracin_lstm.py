@@ -22,7 +22,7 @@ with os.scandir(path) as listOfEntries:
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]='0'
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 print("Device is ", device)
 
 
@@ -74,10 +74,10 @@ for i in range(test_num):
     test_labels.append(test[i][1])
 test_labels = torch.LongTensor(test_labels).to(model.device)
 
-sample_source = torch.Tensor([[train[0][0]]])
+sample_source = torch.stack([train[0][0]], dim=0)
 sample_source_label = train_labels[0]
 
-sample_target = torch.Tensor([[test[0][0]]])
+sample_target = torch.stack([test[0][0]], dim=0)
 sample_target_label = test_labels[0]
 criterion = nn.CrossEntropyLoss()
 learning_rate = 5e-2
