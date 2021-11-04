@@ -74,7 +74,8 @@ for i in range(test_num):
     test_labels.append(test[i][1])
 test_labels = torch.LongTensor(test_labels).to(model.device)
 
-sample_source = torch.stack([train[0][0]], dim=0)
+print("train 0 0 ", train[0][0])
+sample_source = train[0][0]
 sample_source_label = train_labels[0]
 
 sample_target = torch.stack([test[0][0]], dim=0)
