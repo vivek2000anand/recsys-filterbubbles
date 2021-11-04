@@ -17,7 +17,7 @@ class LSTM(nn.Module):
         self.device = device 
         self.emb_length = input_size
         self.item_emb = nn.Embedding(self.num_items, self.emb_length,padding_idx=0)
-        self.batch_size = 1024
+        self.batch_size = 2048
         
         # Defining some parameters
         self.hidden_dim = hidden_dim
@@ -118,7 +118,7 @@ class LSTM(nn.Module):
         print("train # = {}\ttest # = {}".format(train_num,test_num))
 
         criterion = nn.CrossEntropyLoss()
-        learning_rate = 1e-2
+        learning_rate = 5e-2
         optimizer = optim.SGD(self.parameters(), lr=learning_rate, momentum=0.9)
 
         start_time = time.time()
