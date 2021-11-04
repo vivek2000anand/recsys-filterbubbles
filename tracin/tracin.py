@@ -77,7 +77,6 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         # Get target gradients
         model_optimizer.zero_grad()
         target_outputs, _ = curr_model.forward(target)
-        target_outputs = target_outputs.detach()
         # print("target outputs are ", target_outputs)
         target_loss = criterion(target_outputs[0:1], target_label)
         # print("target loss is ", target_loss)
