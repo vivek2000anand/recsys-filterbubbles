@@ -74,15 +74,16 @@ for i in range(test_num):
     test_labels.append(test[i][1])
 test_labels = torch.LongTensor(test_labels).to(model.device)
 
-print("train 0 0 ", train[0][0])
-sample_source = torch.stack([train[i][0] for i in range(2)], dim=0)
-sample_source_label = train_labels[:2]
+# sample_source = torch.stack([train[i][0] for i in range(2)], dim=0)
+# sample_source_label = train_labels[:2]
 
-sample_target = torch.stack([test[i][0] for i in range(2)], dim=0)
-sample_target_label = test_labels[:2]
+# sample_target = torch.stack([test[i][0] for i in range(2)], dim=0)
+# sample_target_label = test_labels[:2]
 criterion = nn.CrossEntropyLoss()
 learning_rate = 5e-2
 optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
 
-influence = calculate_tracin_influence(LSTM, sample_source, sample_source_label, sample_target, sample_target_label, "SGD", criterion, checkpoints)
-print(influence)
+output, hidden = model.forward(torch.stack([train[i][0] for i in range(10)],dim=0).detach())
+print("Output is ", output)
+# influence = calculate_tracin_influence(LSTM, sample_source, sample_source_label, sample_target, sample_target_label, "SGD", criterion, checkpoints)
+# print(influence)
