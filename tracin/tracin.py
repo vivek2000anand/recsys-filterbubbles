@@ -68,7 +68,8 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         # Get source gradients 
         model_optimizer.zero_grad()
         source_outputs, hidden1 = curr_model.forward(source)
-        hidden1.detach()
+        for item in hidden1:
+            item.detach()
         # print("Source outputs are ", source_outputs, source_outputs[0].shape)
         # print("first element", source_outputs[0])
         # print("Source label is ", source_label)
@@ -79,7 +80,8 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         # Get target gradients
         model_optimizer.zero_grad()
         target_outputs, hidden2 = curr_model.forward(target)
-        hidden2.detach()
+        for item in hidden2:
+            item.detach()
         # print("target outputs are ", target_outputs)
         target_loss = criterion(target_outputs[0:1], target_label)
         # print("target loss is ", target_loss)
