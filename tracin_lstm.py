@@ -83,7 +83,8 @@ criterion = nn.CrossEntropyLoss()
 learning_rate = 5e-2
 optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
 
-# output, hidden = model.forward(torch.stack([train[i][0] for i in range(10)],dim=0).detach())
-# print("Output is ", output)
+output, hidden = model.forward(torch.stack([train[i][0] for i in range(10)],dim=0).detach())
+print("Output is ", output)
+
 influence = calculate_tracin_influence(LSTM, sample_source, sample_source_label, sample_target, sample_target_label, "SGD", criterion, checkpoints)
 print(influence)
