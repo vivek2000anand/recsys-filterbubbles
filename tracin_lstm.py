@@ -74,10 +74,10 @@ for i in range(test_num):
     test_labels.append(test[i][1])
 test_labels = torch.LongTensor(test_labels).to(model.device)
 
-sample_source = train[0][0]
+sample_source = [train[0][0]]
 sample_source_label = train_labels[0]
 
-sample_target = test[0][0]
+sample_target = [test[0][0]]
 sample_target_label = test_labels[0]
 criterion = nn.CrossEntropyLoss()
 learning_rate = 5e-2
