@@ -53,7 +53,7 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         raise Exception("Wrong optimizer, can only use SGD")
     num_checkpoints = len(paths)
     influence = 0
-    print("Source ", source)
+    # print("Source ", source)
     for model_index in range(num_checkpoints):
         # TODO get the initialization ready
         # TODO add get gradients to the model
@@ -67,9 +67,9 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         # Get source gradients 
         model_optimizer.zero_grad()
         source_outputs, _ = curr_model.forward(source)
-        print("Source outputs are ", source_outputs, source_outputs[0].shape)
-        print("first element", source_outputs[0])
-        print("Source label is ", source_label)
+        # print("Source outputs are ", source_outputs, source_outputs[0].shape)
+        # print("first element", source_outputs[0])
+        # print("Source label is ", source_label)
         source_loss = criterion(source_outputs[0:1], source_label)
         # print("source loss is ", source_loss)
         source_loss.backward(retain_graph=True)
@@ -77,7 +77,7 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
         # Get target gradients
         model_optimizer.zero_grad()
         target_outputs, _ = curr_model.forward(target)
-        print("target outputs are ", target_outputs)
+        # print("target outputs are ", target_outputs)
         target_loss = criterion(target_outputs[0:1], target_label)
         # print("target loss is ", target_loss)
         target_loss.backward(retain_graph=True)
