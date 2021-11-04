@@ -54,14 +54,14 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     num_checkpoints = len(paths)
     influence = 0
     # print("Source ", source)
+    curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
+    curr_model.LSTM.flatten_parameters()
+    optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     for model_index in range(num_checkpoints):
         print("in it")
         # TODO get the initialization ready
         # TODO add get gradients to the model
         # Load the models and get the informations
-        curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
-        curr_model.LSTM.flatten_parameters()
-        optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
         curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, paths[model_index])
         lr = get_lr(model_optimizer)
         # print("LR is ", lr)
