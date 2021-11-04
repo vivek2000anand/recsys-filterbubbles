@@ -12,9 +12,12 @@ from LSTM_clean.model import LSTM
 
 curr_dir = os.getcwd()
 path = curr_dir + "/checkpoints/"
-checkpoints = [f for f in listdir(path) if isfile(join(path, f))]
-
-
+checkpoints = []
+with os.scandir(path) as listOfEntries:
+    for entry in listOfEntries:
+        # print all entries that are files
+        if entry.is_file():
+            checkpoints.append(os.path.join(path,entry.name))
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]='0'
