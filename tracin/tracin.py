@@ -63,6 +63,8 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     for model_index in range(num_checkpoints):
         print("in it")
         influence += helper_influence(curr_model, source.detach().clone(), source_label.detach().clone(), target.detach().clone(), target_label.detach().clone(), paths[model_index])
+        print("Path: ", paths[model_index] )
+        print("Influence: ", influence)
     return influence
 
 def helper_influence(curr_model, source, source_label, target, target_label, path):
