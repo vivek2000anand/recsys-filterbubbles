@@ -55,6 +55,7 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     influence = 0
     # print("Source ", source)
     for model_index in range(num_checkpoints):
+        print("in it")
         # TODO get the initialization ready
         # TODO add get gradients to the model
         # Load the models and get the informations
