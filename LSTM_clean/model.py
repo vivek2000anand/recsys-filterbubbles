@@ -49,6 +49,16 @@ class LSTM(nn.Module):
         # We'll send the tensor holding the hidden state to the device we specified earlier as well
         hidden = (torch.zeros(self.n_layers, batch_size, self.hidden_dim).to(self.device).detach(), torch.zeros(self.n_layers, batch_size, self.hidden_dim).to(self.device).detach())
         return hidden
+    
+    def get_gradients(self):
+        """Gets gradients of the model: To be used by tracin
+
+        Returns:
+            [type]: 1D torch tensor of gradients
+        """
+        list_params = list(self.parameters())
+        gradients = torch.cat([torch.flatten(l.grad) for l in list_params])
+        return gradients
 
     def compute_metrics(self,test,test_labels):
         """Computes how well the model performs on the test set.
