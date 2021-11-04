@@ -78,7 +78,7 @@ sample_target = test[0][0]
 sample_target_label = test_labels[0]
 criterion = nn.CrossEntropyLoss()
 learning_rate = 5e-2
-optimizer = optim.SGD(LSTM.parameters(), lr=learning_rate, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
 
-influence = calculate_tracin_influence(LSTM, sample_source, sample_source_label, sample_target, sample_target_label, checkpoints)
+influence = calculate_tracin_influence(LSTM, sample_source, sample_source_label, sample_target, sample_target_label, "SGD", criterion, checkpoints)
 print(influence)
