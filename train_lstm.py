@@ -12,8 +12,8 @@ from LSTM_clean.model import LSTM
 # In[3] Set CUDA env
 epochs = 150
 
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]='0'
+# os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+# os.environ["CUDA_VISIBLE_DEVICES"]='7'
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device is ", device)
