@@ -10,7 +10,7 @@ from tracin.tracin import save_tracin_checkpoint, calculate_tracin_influence, ge
 from LSTM_clean.utils import train_test_split, sequence_generator
 from LSTM_clean.model import LSTM
 # In[3] Set CUDA env
-epochs = 500
+epochs = 700
 
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 # os.environ["CUDA_VISIBLE_DEVICES"]='7'
