@@ -80,6 +80,10 @@ source_label = train_labels[3:4]
 target = torch.stack([test[1][0]], dim=0)
 target_label = test_labels[1:2]
 
+print("Source is ", source)
+print("Source label is ", source_label)
+print("Target is ", target)
+print("Target Label is ", target_label)
 # criterion = nn.CrossEntropyLoss()
 # learning_rate = 5e-2
 # optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
