@@ -74,10 +74,13 @@ model.LSTM.flatten_parameters()
 #     test_labels.append(test[i][1])
 # test_labels = torch.LongTensor(test_labels).to(model.device)
 
-source = torch.stack(torch.LongTensor([train[3][0]]), dim=0).to(device)
+source = torch.LongTensor(train[3][0])
+source = torch.stack([source], dim=0).to(device)
 source_label = torch.LongTensor(train_labels[3:4][1]).to(device)
 
-target = torch.stack(torch.LongTensor([test[1][0]]), dim=0).to(device)
+
+target = torch.LongTensor(test[1][0])
+target = torch.stack([target], dim=0).to(device)
 target_label = torch.LongTensor(test_labels[1:2][1]).to(device)
 
 print("Source is ", source)
