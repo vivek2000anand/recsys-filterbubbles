@@ -88,6 +88,23 @@ optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
 # print("Output is ", output)
 # loss = criterion(output, train_labels[:10])
 # print(loss)
+print("First time \n __________________________________")
+influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
+print(influence)
+
+print("Second time \n __________________________________")
+influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
+print(influence)
+
+print("Third time \n __________________________________")
+influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
+print(influence)
+
+print("Fourth time \n __________________________________")
+influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
+print(influence)
+
+print("Fifth time \n __________________________________")
 influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
 print(influence)
 
