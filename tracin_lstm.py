@@ -64,21 +64,21 @@ train_labels,test_labels = [],[]
 model = LSTM(input_size=128, output_size=len(unique_items)+1, hidden_dim=64, n_layers=1, device=device).to(device)
 model.LSTM.flatten_parameters()
 
-for i in range(train_num):
-    train[i][0] = model.item_emb(torch.LongTensor(train[i][0]).to(model.device))
-    train_labels.append(train[i][1])
-train_labels = torch.LongTensor(train_labels).to(model.device)
+# for i in range(train_num):
+#     train[i][0] = model.item_emb(torch.LongTensor(train[i][0]).to(model.device))
+#     train_labels.append(train[i][1])
+# train_labels = torch.LongTensor(train_labels).to(model.device)
          
-for i in range(test_num):
-    test[i][0] = model.item_emb(torch.LongTensor(test[i][0]).to(model.device))
-    test_labels.append(test[i][1])
-test_labels = torch.LongTensor(test_labels).to(model.device)
+# for i in range(test_num):
+#     test[i][0] = model.item_emb(torch.LongTensor(test[i][0]).to(model.device))
+#     test_labels.append(test[i][1])
+# test_labels = torch.LongTensor(test_labels).to(model.device)
 
-source = torch.stack([train[3][0]], dim=0)
-source_label = train_labels[3:4]
+source = torch.stack(torch.LongTensor([train[3][0]]), dim=0).to(device)
+source_label = torch.LongTensor(train_labels[3:4][1]).to(device)
 
-target = torch.stack([test[1][0]], dim=0)
-target_label = test_labels[1:2]
+target = torch.stack(torch.LongTensor([test[1][0]]), dim=0).to(device)
+target_label = torch.LongTensor(test_labels[1:2][1]).to(device)
 
 print("Source is ", source)
 print("Source label is ", source_label)

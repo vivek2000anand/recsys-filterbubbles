@@ -71,6 +71,10 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, path)
     lr = get_lr(model_optimizer)
+    source[0][0] = curr_model.item_emb(torch.LongTensor(source[0][0]))
+    target[0][0] = curr_model.item_emb(torch.LongTensor(target[0][0]))
+    print("source ", source)
+    print("target ", target)
     # print("LR is ", lr)
     # Get source gradients 
     model_optimizer.zero_grad()
