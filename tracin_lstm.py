@@ -60,8 +60,6 @@ print("Train: {}, Test: {}".format(len(train),len(test)))
 train_num,test_num = len(train),len(test)
 train_labels,test_labels = [],[]
 
-# model = LSTM(input_size=128, output_size=len(unique_items)+1, hidden_dim=64, n_layers=1, device=device).to(device)
-# model.LSTM.flatten_parameters()
 
 # for i in range(train_num):
 #     train[i][0] = model.item_emb(torch.LongTensor(train[i][0]).to(model.device))
@@ -72,6 +70,8 @@ train_labels,test_labels = [],[]
 #     test[i][0] = model.item_emb(torch.LongTensor(test[i][0]).to(model.device))
 #     test_labels.append(test[i][1])
 # test_labels = torch.LongTensor(test_labels).to(model.device)
+
+print("__________________________________________________________________________")
 
 
 source = torch.LongTensor(train[3][0]).to(device)
@@ -84,17 +84,64 @@ print("Source is ", source)
 print("Source label is ", source_label)
 print("Target is ", target)
 print("Target Label is ", target_label)
-# criterion = nn.CrossEntropyLoss()
-# learning_rate = 5e-2
-# optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
 
-# output, hidden = model.forward(torch.stack([train[i][0] for i in range(10)],dim=0).detach())
-# print("Output is ", output)
-# loss = criterion(output, train_labels[:10])
-# print(loss)
 print("Calculating Influence \n __________________________________")
 influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-print("Influence is ", influence[0])
+print("Influence is ", influence)
 
+print("__________________________________________________________________________")
+
+source = torch.LongTensor(train[100][0]).to(device)
+source_label  = torch.LongTensor([train[100][1]]).to(device)
+
+target = torch.LongTensor(test[5][0]).to(device)
+target_label  = torch.LongTensor([test[5][1]]).to(device)
+
+print("Source is ", source)
+print("Source label is ", source_label)
+print("Target is ", target)
+print("Target Label is ", target_label)
+
+print("Calculating Influence \n __________________________________")
+influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
+print("Influence is ", influence)
+
+print("__________________________________________________________________________")
+
+
+source = torch.LongTensor(train[2][0]).to(device)
+source_label  = torch.LongTensor([train[2][1]]).to(device)
+
+target = torch.LongTensor(test[6][0]).to(device)
+target_label  = torch.LongTensor([test[6][1]]).to(device)
+
+print("Source is ", source)
+print("Source label is ", source_label)
+print("Target is ", target)
+print("Target Label is ", target_label)
+
+print("Calculating Influence \n __________________________________")
+influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
+print("Influence is ", influence)
+
+print("__________________________________________________________________________")
+
+
+source = torch.LongTensor(train[209][0]).to(device)
+source_label  = torch.LongTensor([train[209][1]]).to(device)
+
+target = torch.LongTensor(test[4][0]).to(device)
+target_label  = torch.LongTensor([test[4][1]]).to(device)
+
+print("Source is ", source)
+print("Source label is ", source_label)
+print("Target is ", target)
+print("Target Label is ", target_label)
+
+print("Calculating Influence \n __________________________________")
+influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
+print("Influence is ", influence)
+
+print("__________________________________________________________________________")
 
 # %%
