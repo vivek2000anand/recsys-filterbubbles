@@ -73,6 +73,7 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     lr = get_lr(model_optimizer)
     source[0] = curr_model.item_emb(torch.LongTensor(source[0]))
     target[0] = curr_model.item_emb(torch.LongTensor(target[0]))
+    source = torch.stack()
     print("source ", source)
     print("target ", target)
     # print("LR is ", lr)
