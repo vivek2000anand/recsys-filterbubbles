@@ -18,7 +18,7 @@ class LSTM(nn.Module):
         self.device = device 
         self.emb_length = input_size
         self.item_emb = nn.Embedding(self.num_items, self.emb_length,padding_idx=0)
-        self.batch_size = 2048
+        self.batch_size = 1024
         
         # Defining some parameters
         self.hidden_dim = hidden_dim
