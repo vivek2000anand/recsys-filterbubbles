@@ -30,13 +30,12 @@ print("Device is ", device)
 print("Loading data")
 path = os.getcwd()
 raw_data = pd.read_csv(path + "/data/twitch100k.csv", sep=',', header=0)
-print(raw_data.head())
+print("Data looks like \n", raw_data.head())
 streamer_community_dict = pd.Series(raw_data['community'].values, index=raw_data['streamer_name']).to_dict()
 data = raw_data[['user_id', 'streamer_name', 'stop_time']]
-print(data.head())
+print("Cleaned data looks like \n",data.head())
 data = data.values
 look_back = 50
-print(data)
 
 # In[6]
 unique_users = sorted(list(set(data[:, 0])))
@@ -49,7 +48,7 @@ for (idx, row) in enumerate(data):
     user,item,time = user_dic[row[0]],item_dic[row[1]],row[2]
     data[idx,0],data[idx,1] = int(user),int(item)
 
-print(data)
+# print(data)
 # In[5] Data preprocessing
 print("Preprocessing Data")
 original_data = train_test_split(data=data)
@@ -61,8 +60,8 @@ print("Train: {}, Test: {}".format(len(train),len(test)))
 train_num,test_num = len(train),len(test)
 train_labels,test_labels = [],[]
 
-model = LSTM(input_size=128, output_size=len(unique_items)+1, hidden_dim=64, n_layers=1, device=device).to(device)
-model.LSTM.flatten_parameters()
+# model = LSTM(input_size=128, output_size=len(unique_items)+1, hidden_dim=64, n_layers=1, device=device).to(device)
+# model.LSTM.flatten_parameters()
 
 # for i in range(train_num):
 #     train[i][0] = model.item_emb(torch.LongTensor(train[i][0]).to(model.device))
@@ -74,14 +73,6 @@ model.LSTM.flatten_parameters()
 #     test_labels.append(test[i][1])
 # test_labels = torch.LongTensor(test_labels).to(model.device)
 
-# source = torch.LongTensor(train[3][0])
-# source = torch.stack([source], dim=0).to(device)
-# source_label = torch.LongTensor(train[3][1]).to(device)
-
-
-# target = torch.LongTensor(test[1][0])
-# target = torch.stack([target], dim=0).to(device)
-# target_label = torch.LongTensor(test[1][1]).to(device)
 
 source = torch.LongTensor(train[3][0]).to(device)
 source_label  = torch.LongTensor([train[3][1]]).to(device)
@@ -101,9 +92,9 @@ print("Target Label is ", target_label)
 # print("Output is ", output)
 # loss = criterion(output, train_labels[:10])
 # print(loss)
-print("First time \n __________________________________")
+print("Calculating Influence \n __________________________________")
 influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-print(influence)
+print("Influence is ", influence[0])
 
 
 # %%

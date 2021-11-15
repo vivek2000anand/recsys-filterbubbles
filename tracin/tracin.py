@@ -75,8 +75,8 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     target = curr_model.item_emb(torch.LongTensor(target))
     source = torch.stack([source], dim=0)
     target = torch.stack([target], dim=0)
-    print("source ", source)
-    print("target ", target)
+    # print("source ", source)
+    # print("target ", target)
     # print("LR is ", lr)
     # Get source gradients 
     model_optimizer.zero_grad()
