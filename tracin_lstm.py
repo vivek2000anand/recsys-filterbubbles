@@ -80,9 +80,9 @@ source_label = train_labels[3:4]
 target = torch.stack([test[1][0]], dim=0)
 target_label = test_labels[1:2]
 
-criterion = nn.CrossEntropyLoss()
-learning_rate = 5e-2
-optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
+# criterion = nn.CrossEntropyLoss()
+# learning_rate = 5e-2
+# optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
 
 # output, hidden = model.forward(torch.stack([train[i][0] for i in range(10)],dim=0).detach())
 # print("Output is ", output)
@@ -92,20 +92,5 @@ print("First time \n __________________________________")
 influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
 print(influence)
 
-print("Second time \n __________________________________")
-influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-print(influence)
-
-print("Third time \n __________________________________")
-influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-print(influence)
-
-print("Fourth time \n __________________________________")
-influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-print(influence)
-
-print("Fifth time \n __________________________________")
-influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-print(influence)
 
 # %%
