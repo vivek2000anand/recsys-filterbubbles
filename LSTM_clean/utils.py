@@ -67,13 +67,13 @@ def sequence_generator(data, look_back = 50):
     return train,test, train_items, test_items #,valid
 
 
-def get_diversity(prev_item_communities, predicted_item_communities, bounds=0.2):
+def get_diversity(prev_item_communities, predicted_item_communities, bounds=0.1):
     """Generates diversity of the recommendations
 
     Args:
         prev_item_communities ([type]): List of communities of the immediate previous items
         predicted_item_communities ([type]): List of topk communities of current items
-        bounds (float, optional): [description]. Defaults to 0.2.
+        bounds (float, optional): Percentage for diverse or moderate. Defaults to 0.1.
 
     Returns:
         [type]: [description]
