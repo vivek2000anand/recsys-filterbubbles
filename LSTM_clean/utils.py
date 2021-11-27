@@ -96,4 +96,7 @@ def get_diversity(prev_item_communities, predicted_item_communities, bounds=0.1)
         else:
             # Neither filter bubble or very diverse
             diversity.append(0)
+        print("New Item:")
+        print("Prev Items: ", prev_item)
+        print("Predicted Items: ", pred_items)
     return diversity
