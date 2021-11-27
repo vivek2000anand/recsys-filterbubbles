@@ -93,7 +93,8 @@ for i in range(len(train)):
     train[i][0] = curr_model.item_emb(torch.LongTensor(train[i][0])).to(device)
     train_labels.append(train[i][1])
 train_labels = torch.LongTensor(train_labels).to(device)
-
+print("train is \n", train)
+print("train_labels are \n", train_labels)
 total_diversity = []
 # Cycle through all of the training points
 for iteration in range(int(train_num/64)+1):
