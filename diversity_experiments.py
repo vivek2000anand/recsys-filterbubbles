@@ -81,7 +81,7 @@ train_num,test_num = len(train),len(test)
 train_labels,test_labels = [],[]
 
 # Load the last checkpoint
-curr_model = LSTM(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
+curr_model = LSTM(input_size=128, output_size=5673, hidden_dim=64, n_layers=1).to(device) 
 curr_model.LSTM.flatten_parameters()
 optimizer = optim.SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
 curr_model, optimizer, epoch, loss =load_tracin_checkpoint(curr_model, optimizer, last_checkpoint)
