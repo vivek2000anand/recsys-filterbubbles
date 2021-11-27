@@ -31,7 +31,7 @@ cpu_device = torch.device("cpu")
 print("CPU Device is ", cpu_device)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+print("device is ", device)
 
 # In[4] Load data (ex: wikipedia [user, item, timestamp])
 print("Loading data")
