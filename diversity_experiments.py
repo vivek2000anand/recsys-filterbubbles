@@ -70,7 +70,7 @@ for (idx, row) in enumerate(data):
 print("Preprocessing Data")
 original_data = train_test_split(data=data)
 # Subsetting Data for user 0
-user0_data = np.array([o for o in original_data if o[0]==0]).to_list()
+user0_data = np.array([o for o in original_data if o[0]==0]).tolist()
 # Get data for the user
 (train,test, train_items, test_items) = sequence_generator(user0_data,look_back)
 test_ground_truth = {i:test[i][1] for i in range(len(test))}
