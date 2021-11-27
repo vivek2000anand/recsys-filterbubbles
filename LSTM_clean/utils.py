@@ -25,7 +25,7 @@ def train_test_split(data=[]):
         sequence_dic[int(new_data[i,0])].append([i,int(new_data[i,1]),new_data[i,2]])
     
     for user in sequence_dic.keys():
-        cur_test = int(0.1*len(sequence_dic[user]))
+        cur_test = int(0.05*len(sequence_dic[user]))
         for i in range(cur_test):
             interaction = sequence_dic[user].pop()
             new_data[interaction[0],3] = 2
@@ -46,6 +46,7 @@ def sequence_generator(data, look_back = 50):
     """
 
     train,test, valid = [],[],[]
+    train_items, test_items, valid_items = [], [], []
     unique_users = set(data[:,0])
     items_per_user = {int(user):[0 for i in range(look_back)] for user in unique_users}
     
@@ -55,10 +56,44 @@ def sequence_generator(data, look_back = 50):
       current_items = items_per_user[user]
       if row[3]==0:
         train.append([current_items[:-1],current_items[-1]])
+        train_items.append(item)
       elif row[3]==2:
         test.append([current_items[:-1],current_items[-1]])
+        test_items.append(item)
       else:
         valid.append([current_items[:-1],current_items[-1]])
+        valid_items.append(item)
                                                                 
-    return train,test #,valid
+    return train,test, train_items, test_items #,valid
 
+
+def get_diversity(prev_item_communities, predicted_item_communities, bounds=0.2):
+    """Generates diversity of the recommendations
+
+    Args:
+        prev_item_communities ([type]): List of communities of the immediate previous items
+        predicted_item_communities ([type]): List of topk communities of current items
+        bounds (float, optional): [description]. Defaults to 0.2.
+
+    Returns:
+        [type]: [description]
+    """
+    assert bounds < 1 and bounds > 0
+    diversity = []
+    top_length = len(predicted_item_communities[-1])
+    for prev_item, pred_items in zip(prev_item_communities, predicted_item_communities):
+        sum = 0
+        # We check if the previous item community is the same as those in the topk predicted
+        for item in pred_items:
+            if prev_item == item:
+                sum +=1
+        if sum >= (1-bounds)*top_length:
+            # Too many within the same community (filter bubble)
+            diversity.append(-1)
+        elif sum <= bounds * top_length:
+            # Very diverse recommendations
+            diversity.append(1)
+        else:
+            # Neither filter bubble or very diverse
+            diversity.append(0)
+    return diversity
