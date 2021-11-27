@@ -104,7 +104,7 @@ for iteration in range(int(train_num/64)+1):
     # Get previous item communities 
     prev_items = train_items[st_idx:ed_idx]
     prev_item_communities = [scaled_streamer_community_dict[item] for item in prev_items]
-    output, hidden = curr_model.forward(torch.stack([train[i][0] for i in range(st_idx,ed_idx)].to(device),dim=0).detach())
+    output, hidden = curr_model.forward(torch.stack([train[i][0] for i in range(st_idx,ed_idx)],dim=0).to(device).detach())
     # Get top k values
     top10 = torch.topk(output, 10).indices.tolist()
     # Get communities for various items in the top 10 
