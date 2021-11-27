@@ -91,7 +91,7 @@ train_labels = []
 for i in range(len(train)):
     # Get item embeddings
     train[i][0] = curr_model.item_emb(torch.LongTensor(train[i][0])).to(device)
-    train_labels.append(train[i][0])
+    train_labels.append(train[i][1])
 train_labels = torch.LongTensor(train_labels).to(device)
 
 total_diversity = []
