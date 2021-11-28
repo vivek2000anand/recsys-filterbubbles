@@ -37,7 +37,6 @@ print("Cleaned data looks like \n",data.head())
 data = data.values
 look_back = 50
 
-# In[6]
 unique_users = sorted(list(set(data[:, 0])))
 unique_items = sorted(list(set(data[:, 1])))
 
@@ -49,10 +48,9 @@ for (idx, row) in enumerate(data):
     data[idx,0],data[idx,1] = int(user),int(item)
 
 # print(data)
-# In[5] Data preprocessing
 print("Preprocessing Data")
 original_data = train_test_split(data=data)
-(train,test) = sequence_generator(original_data,look_back)
+train,test, train_items, test_items = sequence_generator(original_data,look_back)
 test_ground_truth = {i:test[i][1] for i in range(len(test))}
 
 print("Train: {}, Test: {}".format(len(train),len(test)))
