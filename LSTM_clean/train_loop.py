@@ -1,4 +1,3 @@
-# In[1]
 import torch
 import torch.nn as nn
 import numpy as np
@@ -8,7 +7,6 @@ import os
 
 from model import LSTM
 
-# In[2]
 def train_test_split(data=[]):
     
     """\
@@ -72,7 +70,6 @@ def sequence_generator(data, look_back = 50):
     return train,test #,valid
 
 
-# In[3] Set CUDA env
 epochs = 1000
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
@@ -82,7 +79,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device is ", device)
 
 
-# In[4] Load data (ex: wikipedia [user, item, timestamp])
 print("Loading data")
 path = "../data/"
 raw_data = pd.read_csv(path + "wikipedia.tsv", sep='\t', header=None)
