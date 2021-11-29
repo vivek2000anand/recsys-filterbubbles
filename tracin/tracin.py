@@ -114,8 +114,8 @@ def get_lr(optimizer):
 def run_experiments(model, sources, sources_labels, targets, targets_labels, paths, device, optimizer="SGD"):
     # Loop through all source target combinations
     influences = []
-    for source, source_labels in zip(sources, sources_labels):
-        for target, target_labels in zip(targets, targets_labels):
+    for source, source_label in zip(sources, sources_labels):
+        for target, target_label in zip(targets, targets_labels):
             source = torch.LongTensor(source).to(device)
             source_label = torch.LongTensor([source_label]).to(device)
             target = torch.LongTensor(target).to(device)
