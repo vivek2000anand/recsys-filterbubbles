@@ -134,11 +134,11 @@ diverse_points_labels = []
 moderate_points = []
 moderate_points_labels = []
 for i in range(len(total_diversity)):
-    if i == -1:
+    if total_diversity[i] == -1:
         # Filter bubble
         filter_bubbles.append(train[i][0])
         filter_bubbles_labels.append(train_labels[i])
-    elif i == 1:
+    elif total_diversity[i] == 1:
         # Diverse Point
         diverse_points.append(train[i][0])
         diverse_points_labels.append(train_labels[i])
