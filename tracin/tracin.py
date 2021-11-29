@@ -137,7 +137,7 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
             target = torch.LongTensor(target)
             target_label = torch.LongTensor([target_label]).to(device)
             single_influence = calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths, device)
-            influences.append(single_influence.tolist()[0])
+            influences.append(single_influence.tolist())
     return influences
 
 
