@@ -77,6 +77,7 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     print("target \n", target, target.get_device())
     print("source label is \n", source_label, source_label.get_device())
     print("target_label is \n", target_label, target_label.get_device())
+    print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
     source = curr_model.item_emb(torch.LongTensor(source))
     target = curr_model.item_emb(torch.LongTensor(target))
     source = torch.stack([source], dim=0).to(device)
