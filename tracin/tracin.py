@@ -40,7 +40,7 @@ def load_tracin_checkpoint(model, optimizer, path):
     loss = checkpoint['loss']
     return model, optimizer, epoch, loss
 
-def calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths):
+def calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths, device):
     """Calculates influence of source on target datapoint based on TracIn method from checkpoints
 
     Args:
@@ -59,7 +59,7 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     # curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
     # curr_model.LSTM.flatten_parameters()
     # optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
-    curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
+    curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1).to(device) 
     curr_model.LSTM.flatten_parameters()
     for model_index in range(num_checkpoints):
         # print("in it")
@@ -114,13 +114,14 @@ def get_lr(optimizer):
 def run_experiments(model, sources, sources_labels, targets, targets_labels, paths, device, optimizer="SGD"):
     # Loop through all source target combinations
     influences = []
+    print("Device is ", device)
     for source, source_label in zip(sources, sources_labels):
         for target, target_label in zip(targets, targets_labels):
             source = torch.LongTensor(source).to(device)
             source_label = torch.LongTensor([source_label]).to(device)
             target = torch.LongTensor(target).to(device)
             target_label = torch.LongTensor([target_label]).to(device)
-            single_influence = calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths)
+            single_influence = calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths, device)
             influences.append(single_influence)
     return influences
 
