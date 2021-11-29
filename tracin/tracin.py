@@ -1,4 +1,5 @@
 import torch
+from torch._C import device
 from torch.nn.modules.module import _forward_unimplemented
 from torch.optim import SGD
 from copy import deepcopy
@@ -63,14 +64,15 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     curr_model.LSTM.flatten_parameters()
     for model_index in range(num_checkpoints):
         # print("in it")
-        influence += helper_influence(curr_model, source.detach().clone(), source_label.detach().clone(), target.detach().clone(), target_label.detach().clone(), paths[model_index])
+        influence += helper_influence(curr_model, source.detach().clone(), source_label.detach().clone(), target.detach().clone(), target_label.detach().clone(), paths[model_index], device)
         # print("Path: ", paths[model_index] )
         # print("Influence: ", influence)
     return influence
 
-def helper_influence(curr_model, source, source_label, target, target_label, path):
+def helper_influence(curr_model, source, source_label, target, target_label, path, device):
     optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, path)
+    curr_model.to(device)
     lr = get_lr(model_optimizer)
     source = curr_model.item_emb(torch.LongTensor(source))
     target = curr_model.item_emb(torch.LongTensor(target))
