@@ -89,7 +89,7 @@ curr_model, optimizer, epoch, loss =load_tracin_checkpoint(curr_model, optimizer
 
 # Cycle through all of the training points
 train_labels = []
-train_emb = [[] for _ in range(len(train))]
+train_emb = [[-1] for _ in range(len(train))]
 for i in range(len(train)):
     # Get item embeddings
     train_emb[i][0] = curr_model.item_emb(torch.LongTensor(train[i][0])).to(device)
