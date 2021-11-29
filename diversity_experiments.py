@@ -5,12 +5,13 @@ import os
 import torch.optim as optim
 from os import listdir
 from os.path import isfile, join
-from tracin.tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence
+from tracin.tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence, run_experiments
 import pandas as pd
 from LSTM_clean.utils import train_test_split, sequence_generator, get_diversity
 from LSTM_clean.model import LSTM
 import numpy as np
 import re
+from statistics import mean
 
 curr_dir = os.getcwd()
 path = curr_dir + "/checkpoints/"
@@ -88,9 +89,10 @@ curr_model, optimizer, epoch, loss =load_tracin_checkpoint(curr_model, optimizer
 
 # Cycle through all of the training points
 train_labels = []
+train_emb = [[] for _ in range(len(train))]
 for i in range(len(train)):
     # Get item embeddings
-    train[i][0] = curr_model.item_emb(torch.LongTensor(train[i][0])).to(device)
+    train_emb[i][0] = curr_model.item_emb(torch.LongTensor(train[i][0])).to(device)
     train_labels.append(train[i][1])
 train_labels = torch.LongTensor(train_labels).to(device)
 print("train is \n", train)
@@ -106,7 +108,7 @@ for iteration in range(int(train_num/64)+1):
     # Get previous item communities 
     prev_items = train_items[st_idx:ed_idx]
     prev_item_communities = [scaled_streamer_community_dict[item] for item in prev_items]
-    output, hidden = curr_model.forward(torch.stack([train[i][0] for i in range(st_idx,ed_idx)],dim=0).to(device).detach())
+    output, hidden = curr_model.forward(torch.stack([train_emb[i][0] for i in range(st_idx,ed_idx)],dim=0).to(device).detach())
     # Get top k values
     top10 = torch.topk(output, 10).indices.tolist()
     # Get communities for various items in the top 10 
@@ -124,10 +126,33 @@ print("Total Filter Bubbles are ", str(sum([1 if i ==-1 else 0 for i in total_di
 print("Total Diverse points are ", str(sum([1 if i ==1 else 0 for i in total_diversity ])))
 print("Total Moderate points are ", str(sum([1 if i ==0 else 0 for i in total_diversity ])))
         
+# TracIn section Evaluating points against each other
+filter_bubbles = []
+filter_bubbles_labels = []
+diverse_points = []
+diverse_points_labels = []
+moderate_points = []
+moderate_points_labels = []
+for i in range(len(total_diversity)):
+    if i == -1:
+        # Filter bubble
+        filter_bubbles.append(train[i][0])
+        filter_bubbles_labels.append(train_labels[i])
+    elif i == 1:
+        # Diverse Point
+        diverse_points.append(train[i][0])
+        diverse_points_labels.append(diverse_points_labels[i])
+    else:
+        # Neither, moderate point
+        moderate_points.append(train[i][0])
+        moderate_points_labels.append(moderate_points_labels[i])
 
 
+# Dummy Experiment
+influences = run_experiments(curr_model, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
+targets_labels=diverse_points_labels, paths=checkpoints, device=device)
 
-
+print("Influence of filter bubbles on diverse points ", mean(influences))
 
 # for i in range(train_num):
 #     train[i][0] = model.item_emb(torch.LongTensor(train[i][0]).to(model.device))

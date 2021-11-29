@@ -1,4 +1,5 @@
 import torch
+from torch.nn.modules.module import _forward_unimplemented
 from torch.optim import SGD
 from copy import deepcopy
 from torch import nn
@@ -108,6 +109,20 @@ def get_lr(optimizer):
     """
     for param_group in optimizer.param_groups:
         return param_group['lr']
+
+
+def run_experiments(model, sources, sources_labels, targets, targets_labels, paths, device, optimizer="SGD"):
+    # Loop through all source target combinations
+    influences = []
+    for source, source_labels in zip(sources, sources_labels):
+        for target, target_labels in zip(targets, targets_labels):
+            source = torch.LongTensor(source).to(device)
+            source_label = torch.LongTensor([source_label]).to(device)
+            target = torch.LongTensor(target).to(device)
+            target_label = torch.LongTensor([target_label]).to(device)
+            single_influence = calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths)
+            influences.append(single_influence)
+    return influences
 
 
 if __name__ == "__main__":
