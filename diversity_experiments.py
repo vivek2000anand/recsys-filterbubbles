@@ -141,11 +141,11 @@ for i in range(len(total_diversity)):
     elif i == 1:
         # Diverse Point
         diverse_points.append(train[i][0])
-        diverse_points_labels.append(diverse_points_labels[i])
+        diverse_points_labels.append(train_labels[i])
     else:
         # Neither, moderate point
         moderate_points.append(train[i][0])
-        moderate_points_labels.append(moderate_points_labels[i])
+        moderate_points_labels.append(train_labels[i])
 
 
 # Dummy Experiment
