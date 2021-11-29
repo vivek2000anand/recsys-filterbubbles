@@ -96,7 +96,7 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     source_loss = criterion(source_outputs[0:1], source_label)
     # print("source loss is ", source_loss)
     source_loss.backward()
-    source_gradients = curr_model.get_gradients()
+    source_gradients = curr_model.get_gradients(device)
     # Get target gradients
     model_optimizer.zero_grad()
     # print("target outputs are ", target_outputs)
