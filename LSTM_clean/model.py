@@ -60,6 +60,7 @@ class LSTM(nn.Module):
         list_params = list(self.parameters())
         print("list_params \n",list_params)
         print("grads \n", [l.grad for l in list_params])
+        print("tensors not on cuda", [l.get_device() for l in list_params])
         gradients = torch.cat([torch.flatten(l.grad) for l in list_params if l.grad is not None])
         return gradients
 
