@@ -151,7 +151,6 @@ for i in range(len(total_diversity)):
 # Dummy Experiment
 influences = run_experiments(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
 targets_labels=diverse_points_labels, paths=checkpoints, device=device)
-influences = influences.tolist()
 print("Influence of filter bubbles on diverse points ", mean(influences))
 
 # for i in range(train_num):

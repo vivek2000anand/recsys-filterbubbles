@@ -4,6 +4,7 @@ from torch.nn.modules.module import _forward_unimplemented
 from torch.optim import SGD
 from copy import deepcopy
 from torch import nn
+from tqdm import tqdm
 
 def save_tracin_checkpoint(model, epoch, loss, optimizer, path):
     """Saves a checkpoint for tracin to a path
@@ -129,14 +130,14 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
     # Loop through all source target combinations
     influences = []
     print("Device is ", device)
-    for source, source_label in zip(sources, sources_labels):
-        for target, target_label in zip(targets, targets_labels):
+    for source, source_label in tqdm(zip(sources, sources_labels), desc="Source Progress"):
+        for target, target_label in zip(targets, targets_labels, desc="Target Progress"):
             source = torch.LongTensor(source)
             source_label = torch.LongTensor([source_label]).to(device)
             target = torch.LongTensor(target)
             target_label = torch.LongTensor([target_label]).to(device)
             single_influence = calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths, device)
-            influences.append(single_influence)
+            influences.append(single_influence.tolist()[0])
     return influences
 
 
