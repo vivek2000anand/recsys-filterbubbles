@@ -58,8 +58,8 @@ class LSTM(nn.Module):
             [type]: 1D torch tensor of gradients
         """
         list_params = list(self.parameters())
-        print("list_params \n",list_params)
-        print("grads \n", [l.grad for l in list_params])
+        #print("list_params \n",list_params)
+        #print("grads \n", [l.grad for l in list_params])
         print("tensors not on cuda", [l.grad.get_device() for l in list_params])
         print("tensors not on cuda", [l.get_device() for l in list_params])
         gradients = torch.cat([torch.flatten(l.grad.to(device)) for l in list_params if l.grad is not None])
