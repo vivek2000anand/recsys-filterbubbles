@@ -77,6 +77,8 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     target = curr_model.item_emb(torch.LongTensor(target))
     source = torch.stack([source], dim=0).to(device)
     target = torch.stack([target], dim=0).to(device)
+    source_label.to(device)
+    target_label.to(device)
     curr_model.to(device)
     # print("source ", source)
     # print("target ", target)
@@ -120,9 +122,9 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
     for source, source_label in zip(sources, sources_labels):
         for target, target_label in zip(targets, targets_labels):
             source = torch.LongTensor(source)
-            source_label = torch.LongTensor([source_label]).to(device)
+            source_label = torch.LongTensor([source_label])
             target = torch.LongTensor(target)
-            target_label = torch.LongTensor([target_label]).to(device)
+            target_label = torch.LongTensor([target_label])
             single_influence = calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths, device)
             influences.append(single_influence)
     return influences
