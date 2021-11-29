@@ -13,12 +13,12 @@ def save_tracin_checkpoint(model, epoch, loss, optimizer, path):
         optimizer ([type]): [description]
         path ([type]): [description]
     """
-    torch.save({
-        'epoch': epoch,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'loss': loss
-    }, path)
+    # torch.save({
+    #     'epoch': epoch,
+    #     'model_state_dict': model.state_dict(),
+    #     'optimizer_state_dict': optimizer.state_dict(),
+    #     'loss': loss
+    # }, path)
     return
 
 def load_tracin_checkpoint(model, optimizer, path):

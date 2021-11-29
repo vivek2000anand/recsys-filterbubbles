@@ -24,7 +24,7 @@ print("Loading data")
 path = os.getcwd()
 raw_data = pd.read_csv(path + "/data/twitch100k.csv", sep=',', header=0)
 print(raw_data.head())
-streamer_community_dict = pd.Series(raw_data['community'].values, index=raw_data['streamer_name']).to_dict()
+# streamer_community_dict = pd.Series(raw_data['community'].values, index=raw_data['streamer_name']).to_dict()
 data = raw_data[['user_id', 'streamer_name', 'stop_time']]
 print(data.head())
 data = data.values

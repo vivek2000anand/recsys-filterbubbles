@@ -15,8 +15,6 @@ from LSTM_clean.utils import train_test_split, sequence_generator
 from LSTM_clean.model import LSTM
 
 
-def printl():
-    print(80 * "-")
 
 
 curr_dir = os.getcwd()
