@@ -119,7 +119,7 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
     print("Device is ", device)
     for source, source_label in zip(sources, sources_labels):
         for target, target_label in zip(targets, targets_labels):
-            source = torch.LongTensor(source).to(device)
+            source = torch.LongTensor(source)
             source_label = torch.LongTensor([source_label]).to(device)
             target = torch.LongTensor(target).to(device)
             target_label = torch.LongTensor([target_label]).to(device)
