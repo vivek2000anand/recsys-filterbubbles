@@ -80,8 +80,11 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     source_label.to(device)
     target_label.to(device)
     curr_model.to(device)
-    # print("source ", source)
-    # print("target ", target)
+    print("source \n", source)
+    print("target \n", target)
+    print("source label is \n", source_label)
+    print("target_label is \n", target_label)
+    print("model is \n", curr_model)
     # print("LR is ", lr)
     # Get source gradients 
     model_optimizer.zero_grad()
