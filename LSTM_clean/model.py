@@ -51,7 +51,7 @@ class LSTM(nn.Module):
         hidden = (torch.zeros(self.n_layers, batch_size, self.hidden_dim).to(self.device).detach(), torch.zeros(self.n_layers, batch_size, self.hidden_dim).to(self.device).detach())
         return hidden
     
-    def get_gradients(self):
+    def get_gradients(self, device):
         """Gets gradients of the model: To be used by tracin
 
         Returns:
@@ -62,7 +62,7 @@ class LSTM(nn.Module):
         print("grads \n", [l.grad for l in list_params])
         print("tensors not on cuda", [l.grad.get_device() for l in list_params])
         print("tensors not on cuda", [l.get_device() for l in list_params])
-        gradients = torch.cat([torch.flatten(l.grad) for l in list_params if l.grad is not None])
+        gradients = torch.cat([torch.flatten(l.grad.to(device)) for l in list_params if l.grad is not None])
         return gradients
 
     def compute_metrics(self,test,test_labels):

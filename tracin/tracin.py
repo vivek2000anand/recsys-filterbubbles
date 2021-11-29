@@ -102,7 +102,7 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
     # print("target outputs are ", target_outputs)
     criterion(curr_model.forward(target)[0][0:1], target_label).backward()
     # print("target loss is ", target_loss)
-    target_gradients = curr_model.get_gradients()
+    target_gradients = curr_model.get_gradients(device)
     # Calculate influence for this epoch. Flatten weights and dot product.
     val = torch.dot(source_gradients, target_gradients)
     val += val * lr
