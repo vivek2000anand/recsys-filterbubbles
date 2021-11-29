@@ -59,7 +59,7 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
     # curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
     # curr_model.LSTM.flatten_parameters()
     # optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
-    curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1).to(device) 
+    curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1, device=device)
     curr_model.LSTM.flatten_parameters()
     for model_index in range(num_checkpoints):
         # print("in it")
