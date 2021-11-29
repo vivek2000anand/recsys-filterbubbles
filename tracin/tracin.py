@@ -72,12 +72,12 @@ def calculate_tracin_influence(model, source, source_label, target, target_label
 def helper_influence(curr_model, source, source_label, target, target_label, path, device):
     optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, path)
-    curr_model.to(device)
     lr = get_lr(model_optimizer)
     source = curr_model.item_emb(torch.LongTensor(source))
     target = curr_model.item_emb(torch.LongTensor(target))
     source = torch.stack([source], dim=0)
     target = torch.stack([target], dim=0)
+    curr_model.to(device)
     # print("source ", source)
     # print("target ", target)
     # print("LR is ", lr)
