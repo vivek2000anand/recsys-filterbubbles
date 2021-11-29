@@ -130,8 +130,12 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
     # Loop through all source target combinations
     influences = []
     print("Device is ", device)
-    for source, source_label in tqdm(zip(sources, sources_labels), desc="Source Progress"):
-        for target, target_label in tqdm(zip(targets, targets_labels), desc="Target Progress"):
+    for i in tqdm(range(len(sources)), desc="Source Progress"):
+        source = sources[i]
+        source_label = sources_labels[i]
+        for j in tqdm(range(len(targets)), desc="Target Progress"):
+            target = targets[j]
+            target_label = targets_labels[j]
             source = torch.LongTensor(source)
             source_label = torch.LongTensor([source_label]).to(device)
             target = torch.LongTensor(target)
