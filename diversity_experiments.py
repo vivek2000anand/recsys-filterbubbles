@@ -149,91 +149,10 @@ for i in range(len(total_diversity)):
 
 
 # Dummy Experiment
+# Compares Effects of filter bubbles on the diverse points
 influences = run_experiments(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
 targets_labels=diverse_points_labels, paths=checkpoints, device=device)
-print("Influence of filter bubbles on diverse points ", mean(influences))
-
-# for i in range(train_num):
-#     train[i][0] = model.item_emb(torch.LongTensor(train[i][0]).to(model.device))
-#     train_labels.append(train[i][1])
-# train_labels = torch.LongTensor(train_labels).to(model.device)
-         
-# for i in range(test_num):
-#     test[i][0] = model.item_emb(torch.LongTensor(test[i][0]).to(model.device))
-#     test_labels.append(test[i][1])
-# test_labels = torch.LongTensor(test_labels).to(model.device)
-
-# print("__________________________________________________________________________")
+print("Summary Statistics for influences: \n", pd.Series(influences).describe())
 
 
-# source = torch.LongTensor(train[3][0]).to(device)
-# source_label  = torch.LongTensor([train[3][1]]).to(device)
 
-# target = torch.LongTensor(test[1][0]).to(device)
-# target_label  = torch.LongTensor([test[1][1]]).to(device)
-
-# print("Source is ", source)
-# print("Source label is ", source_label)
-# print("Target is ", target)
-# print("Target Label is ", target_label)
-
-# print("Calculating Influence \n __________________________________")
-# influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-# print("Influence is ", influence)
-
-# print("__________________________________________________________________________")
-
-# source = torch.LongTensor(train[100][0]).to(device)
-# source_label  = torch.LongTensor([train[100][1]]).to(device)
-
-# target = torch.LongTensor(test[5][0]).to(device)
-# target_label  = torch.LongTensor([test[5][1]]).to(device)
-
-# print("Source is ", source)
-# print("Source label is ", source_label)
-# print("Target is ", target)
-# print("Target Label is ", target_label)
-
-# print("Calculating Influence \n __________________________________")
-# influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-# print("Influence is ", influence)
-
-# print("__________________________________________________________________________")
-
-
-# source = torch.LongTensor(train[2][0]).to(device)
-# source_label  = torch.LongTensor([train[2][1]]).to(device)
-
-# target = torch.LongTensor(test[6][0]).to(device)
-# target_label  = torch.LongTensor([test[6][1]]).to(device)
-
-# print("Source is ", source)
-# print("Source label is ", source_label)
-# print("Target is ", target)
-# print("Target Label is ", target_label)
-
-# print("Calculating Influence \n __________________________________")
-# influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-# print("Influence is ", influence)
-
-# print("__________________________________________________________________________")
-
-
-# source = torch.LongTensor(train[209][0]).to(device)
-# source_label  = torch.LongTensor([train[209][1]]).to(device)
-
-# target = torch.LongTensor(test[4][0]).to(device)
-# target_label  = torch.LongTensor([test[4][1]]).to(device)
-
-# print("Source is ", source)
-# print("Source label is ", source_label)
-# print("Target is ", target)
-# print("Target Label is ", target_label)
-
-# print("Calculating Influence \n __________________________________")
-# influence = calculate_tracin_influence(LSTM, source, source_label, target, target_label, "SGD",  checkpoints)
-# print("Influence is ", influence)
-
-# print("__________________________________________________________________________")
-
-# %%

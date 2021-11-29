@@ -127,6 +127,21 @@ def get_lr(optimizer):
 
 
 def run_experiments(model, sources, sources_labels, targets, targets_labels, paths, device, optimizer="SGD"):
+    """Runs TracIn experiments for all combinations of sources and targets
+
+    Args:
+        model ([type]): Class of model used (Has to be LSTM)
+        sources ([type]): List of sources
+        sources_labels ([type]): List of source labels
+        targets ([type]): List of targets
+        targets_labels ([type]): List of target labels
+        paths ([type]): List containing paths to the checkpoints
+        device ([type]): Which device to run on
+        optimizer (str, optional): Optimizer to use. Has to be "SGD" Defaults to "SGD".
+
+    Returns:
+        [type]: List of influences of sources on targets
+    """
     # Loop through all source target combinations
     influences = []
     print("Device is ", device)
