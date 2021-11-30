@@ -113,8 +113,8 @@ for i in tqdm(range(len(all_users)), desc="Users"):
         train_emb[i][0] = curr_model.item_emb(torch.LongTensor(train[i][0])).to(device)
         train_labels.append(train[i][1])
     train_labels = torch.LongTensor(train_labels).to(device)
-    print("train is \n", train)
-    print("train_labels are \n", train_labels)
+    # print("train is \n", train)
+    # print("train_labels are \n", train_labels)
     total_diversity = []
     curr_model.to(device)
     # Cycle through all of the training points

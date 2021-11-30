@@ -162,8 +162,12 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
 
 
 def big_run(file, user, model, sources, sources_labels, targets, targets_labels, paths, device, optimizer="SGD"):
-    influences = run_experiments(model, sources, targets, sources_labels,
-    targets_labels, paths, device=device)
+    # cpu = torch.device("cpu")
+    # sources = sources.to(cpu)
+    # source_labels = sources_labels.to(cpu)
+    # targets = targets.to("cpu")
+    # targets_labels
+    influences = run_experiments(model, sources,  sources_labels, targets, targets_labels, paths, device=device)
     df = pd.DataFrame(influences).describe().transpose()
     df['userid'] = user
     cols = df.columns.tolist()
