@@ -37,7 +37,7 @@ last_checkpoint_epoch = max([int(re.sub('[^0-9]','', a)[2:]) for a in checkpoint
 last_checkpoint = sorted(checkpoints)[-1][:-5] + str(last_checkpoint_epoch) + ".pt"
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]='0'
+os.environ["CUDA_VISIBLE_DEVICES"]='2'
 
 cpu_device = torch.device("cpu")
 print("CPU Device is ", cpu_device)
@@ -118,8 +118,8 @@ for i in tqdm(range(len(all_users)), desc="Users"):
     total_diversity = []
     curr_model.to(device)
     # Cycle through all of the training points
-    for iteration in range(int(train_num/64)+1):
-        st_idx,ed_idx = iteration*64, (iteration+1)*64
+    for iteration in range(int(train_num/256)+1):
+        st_idx,ed_idx = iteration*256, (iteration+1)*256
         if ed_idx>train_num:
             ed_idx = train_num           
         optimizer.zero_grad()
