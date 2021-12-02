@@ -175,6 +175,8 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
     # print("targets ", targets)
     # print("target labels", target_labels)
     # Get embeddings
+    cpu_device = torch.device("cpu")
+    curr_model.to(cpu_device)
     for i in range(len(sources)):
         sources[i] = curr_model.item_emb(torch.LongTensor(sources[i]))
         targets[i] = curr_model.item_emb(torch.LongTensor(targets[i]))
