@@ -152,6 +152,6 @@ for i in range(len(total_diversity)):
 # Compares Effects of filter bubbles on the diverse points
 #influences = run_experiments(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
 #targets_labels=diverse_points_labels, paths=checkpoints, device=device)
-influences = run_experiments(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
+influences = calculate_tracin_influence_batch(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
 targets_labels=diverse_points_labels, paths=checkpoints, device=device)
 print("Summary Statistics for influences: \n", pd.Series(influences).describe())
