@@ -146,7 +146,7 @@ def calculate_tracin_influence_batch(model, sources, source_labels, targets, tar
         # print("in it")
         curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1, device=device)
         curr_model.LSTM.flatten_parameters()
-        temp_influence = helper_influence(curr_model, sources, source_labels, targets, target_labels, paths[model_index], device)
+        temp_influence = helper_influence_batch(curr_model, sources, source_labels, targets, target_labels, paths[model_index], device)
         influence = [temp_influence[i] + influence[i] for i in range(len(sources))]
         # print("Path: ", paths[model_index] )
         # print("Influence: ", influence)
