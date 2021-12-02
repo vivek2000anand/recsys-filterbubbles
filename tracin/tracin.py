@@ -167,6 +167,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
     # print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
     vals = []
     for source, source_label, target, target_label in zip(sources, source_labels, targets, target_labels):
+        print("in loop")
         source = curr_model.item_emb(torch.LongTensor(source))
         target = curr_model.item_emb(torch.LongTensor(target))
         source = torch.stack([source], dim=0).to(device)
@@ -200,7 +201,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         # Calculate influence for this epoch. Flatten weights and dot product.
         val = torch.dot(source_gradients, target_gradients)
         val += val * lr
-        vals.append(val)
+        vals.append(deepcopy(val))
     return vals
 
 
