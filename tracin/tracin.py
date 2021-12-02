@@ -181,7 +181,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         print("source label is \n", source_label, source_label.get_device())
         print("target_label is \n", target_label, target_label.get_device())
         print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
-        source = curr_model.item_emb(torch.LongTensor(source))
+        source = curr_model.item_emb(torch.LongTensor(source.to(device)))
         target = curr_model.item_emb(torch.LongTensor(target))
         source = torch.stack([source], dim=0).to(device)
         target = torch.stack([target], dim=0).to(device)
