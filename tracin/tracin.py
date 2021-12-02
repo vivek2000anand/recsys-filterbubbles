@@ -136,6 +136,7 @@ def calculate_tracin_influence_batch(model, sources, source_labels, targets, tar
         raise Exception("Wrong optimizer, can only use SGD")
     num_checkpoints = len(paths)
     influence = [0 for _ in range(len(sources))]
+    print("influence ", influence)
     # print("Source ", source)
     # curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1) 
     # curr_model.LSTM.flatten_parameters()
@@ -147,6 +148,7 @@ def calculate_tracin_influence_batch(model, sources, source_labels, targets, tar
         curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1, device=device)
         curr_model.LSTM.flatten_parameters()
         temp_influence = helper_influence_batch(curr_model, sources, source_labels, targets, target_labels, paths[model_index], device)
+        print("Temp influence is ", temp_influence)
         influence = [temp_influence[i] + influence[i] for i in range(len(sources))]
         # print("Path: ", paths[model_index] )
         # print("Influence: ", influence)
