@@ -181,20 +181,20 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
     curr_model.to(device)
     for source, source_label, target, target_label in zip(sources, source_labels, targets, target_labels):
         # print("in loop")
-        print("source \n", source)
-        print("target \n", target, target.get_device())
-        print("source label is \n", source_label, source_label.get_device())
-        print("target_label is \n", target_label, target_label.get_device())
-        print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
+        # print("source \n", source)
+        # print("target \n", target, target.get_device())
+        # print("source label is \n", source_label, source_label.get_device())
+        # print("target_label is \n", target_label, target_label.get_device())
+        # print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
         source = torch.stack([source], dim=0).to(device)
         target = torch.stack([target], dim=0).to(device)
         source_label = torch.LongTensor([source_label]).to(device)
         target_label = torch.LongTensor([target_label]).to(device)
-        print("source \n", source, source.get_device())
-        print("target \n", target, target.get_device())
-        print("source label is \n", source_label, source_label.get_device())
-        print("target_label is \n", target_label, target_label.get_device())
-        print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
+        # print("source \n", source, source.get_device())
+        # print("target \n", target, target.get_device())
+        # print("source label is \n", source_label, source_label.get_device())
+        # print("target_label is \n", target_label, target_label.get_device())
+        # print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
         # print("LR is ", lr)
         # Get source gradients 
         model_optimizer.zero_grad()
@@ -204,7 +204,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         # print("first element", source_outputs[0])
         # print("Source label is ", source_label)
         source_loss = criterion(source_outputs[0:1], source_label)
-        print("source loss is ", source_loss, source_loss.get_device())
+        # print("source loss is ", source_loss, source_loss.get_device())
         source_loss.backward()
         source_gradients = curr_model.get_gradients(device)
         # Get target gradients
@@ -217,7 +217,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         val = torch.dot(source_gradients, target_gradients)
         val += val * lr
         vals.append(deepcopy(val))
-        print("_________________________________-")
+        # print("_________________________________-")
     return vals
 
 
