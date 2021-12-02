@@ -204,7 +204,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         # print("first element", source_outputs[0])
         # print("Source label is ", source_label)
         source_loss = criterion(source_outputs[0:1], source_label)
-        # print("source loss is ", source_loss)
+        print("source loss is ", source_loss, source_loss.get_device())
         source_loss.backward()
         source_gradients = curr_model.get_gradients(device)
         # Get target gradients
@@ -217,6 +217,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         val = torch.dot(source_gradients, target_gradients)
         val += val * lr
         vals.append(deepcopy(val))
+        print("_________________________________-")
     return vals
 
 
