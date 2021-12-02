@@ -161,6 +161,10 @@ def calculate_tracin_influence_batch(model, sources, source_labels, targets, tar
 
 
 def helper_influence_batch(curr_model, sources, source_labels, targets, target_labels, path, device):
+    sources = deepcopy(sources)
+    source_labels = deepcopy(source_labels)
+    targets = deepcopy(targets)
+    target_labels = deepcopy(target_labels)
     optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, path)
     lr = get_lr(model_optimizer)
