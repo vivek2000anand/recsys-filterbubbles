@@ -175,9 +175,9 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
     # print("targets ", targets)
     # print("target labels", target_labels)
     # Get embeddings
-    for source, target in zip(sources, targets):
-        source = curr_model.item_emb(torch.LongTensor(source))
-        target = curr_model.item_emb(torch.LongTensor(target))
+    for i in range(len(sources)):
+        sources[i] = curr_model.item_emb(torch.LongTensor(sources[i]))
+        targets[i] = curr_model.item_emb(torch.LongTensor(targets[i]))
     for source, source_label, target, target_label in zip(sources, source_labels, targets, target_labels):
         # print("in loop")
         print("source \n", source)
