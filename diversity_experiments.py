@@ -153,5 +153,5 @@ for i in range(len(total_diversity)):
 #influences = run_experiments(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
 #targets_labels=diverse_points_labels, paths=checkpoints, device=device)
 influences = calculate_tracin_influence_batch(LSTM, sources=filter_bubbles, targets=diverse_points, source_labels=filter_bubbles_labels,
-target_labels=diverse_points_labels, paths=checkpoints, device=device)
+target_labels=diverse_points_labels, optimizer="SGD", paths=checkpoints, device=device)
 print("Summary Statistics for influences: \n", pd.Series(influences).describe())
