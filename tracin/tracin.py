@@ -174,6 +174,10 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
     # print("source labels", source_labels)
     # print("targets ", targets)
     # print("target labels", target_labels)
+    # Get embeddings
+    for source, target in zip(sources, targets):
+        source = curr_model.item_emb(torch.LongTensor(source))
+        target = curr_model.item_emb(torch.LongTensor(target))
     for source, source_label, target, target_label in zip(sources, source_labels, targets, target_labels):
         # print("in loop")
         print("source \n", source)
@@ -181,8 +185,6 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         print("source label is \n", source_label, source_label.get_device())
         print("target_label is \n", target_label, target_label.get_device())
         print("model is \n", curr_model, next(curr_model.parameters()).is_cuda)
-        source = curr_model.item_emb(torch.LongTensor(source))
-        target = curr_model.item_emb(torch.LongTensor(target))
         source = torch.stack([source], dim=0).to(device)
         target = torch.stack([target], dim=0).to(device)
         source_label = torch.LongTensor([source_label]).to(device)
