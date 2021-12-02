@@ -178,6 +178,7 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
     for i in range(len(sources)):
         sources[i] = curr_model.item_emb(torch.LongTensor(sources[i]))
         targets[i] = curr_model.item_emb(torch.LongTensor(targets[i]))
+    curr_model.to(device)
     for source, source_label, target, target_label in zip(sources, source_labels, targets, target_labels):
         # print("in loop")
         print("source \n", source)
@@ -189,7 +190,6 @@ def helper_influence_batch(curr_model, sources, source_labels, targets, target_l
         target = torch.stack([target], dim=0).to(device)
         source_label = torch.LongTensor([source_label]).to(device)
         target_label = torch.LongTensor([target_label]).to(device)
-        curr_model.to(device)
         print("source \n", source, source.get_device())
         print("target \n", target, target.get_device())
         print("source label is \n", source_label, source_label.get_device())
