@@ -5,7 +5,7 @@ import os
 import torch.optim as optim
 from os import listdir
 from os.path import isfile, join
-from tracin.tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence, run_experiments
+from tracin.tracin import save_tracin_checkpoint, load_tracin_checkpoint, calculate_tracin_influence, run_experiments, calculate_tracin_influence_batch
 import pandas as pd
 from LSTM_clean.utils import train_test_split, sequence_generator, get_diversity
 from LSTM_clean.model import LSTM
@@ -150,6 +150,8 @@ for i in range(len(total_diversity)):
 
 # Dummy Experiment
 # Compares Effects of filter bubbles on the diverse points
+#influences = run_experiments(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
+#targets_labels=diverse_points_labels, paths=checkpoints, device=device)
 influences = run_experiments(LSTM, sources=filter_bubbles, targets=diverse_points, sources_labels=filter_bubbles_labels,
 targets_labels=diverse_points_labels, paths=checkpoints, device=device)
 print("Summary Statistics for influences: \n", pd.Series(influences).describe())
