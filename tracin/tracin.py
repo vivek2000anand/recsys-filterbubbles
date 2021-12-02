@@ -5,11 +5,9 @@ from torch.optim import SGD
 from copy import deepcopy
 from torch import nn
 from tqdm import tqdm
-import pandas as pd
 
 def save_tracin_checkpoint(model, epoch, loss, optimizer, path):
     """Saves a checkpoint for tracin to a path
-
     Args:
         model ([type]): [description]
         epoch ([type]): [description]
@@ -27,12 +25,10 @@ def save_tracin_checkpoint(model, epoch, loss, optimizer, path):
 
 def load_tracin_checkpoint(model, optimizer, path):
     """Loads a tracin checkpoint from a path
-
     Args:
         model ([type]): [description]
         optimizer ([type]): [description]
         path ([type]): [description]
-
     Returns:
         [type]: [description]
     """
@@ -45,7 +41,6 @@ def load_tracin_checkpoint(model, optimizer, path):
 
 def calculate_tracin_influence(model, source, source_label, target, target_label, optimizer, paths, device):
     """Calculates influence of source on target datapoint based on TracIn method from checkpoints
-
     Args:
         model ([type]): [description]
         source ([type]): [description]
@@ -119,7 +114,6 @@ def helper_influence(curr_model, source, source_label, target, target_label, pat
 
 def get_lr(optimizer):
     """Gets learning rate given an optimizer
-
     Args:
         optimizer ([type]): [description]
     """
@@ -129,7 +123,6 @@ def get_lr(optimizer):
 
 def run_experiments(model, sources, sources_labels, targets, targets_labels, paths, device, optimizer="SGD"):
     """Runs TracIn experiments for all combinations of sources and targets
-
     Args:
         model ([type]): Class of model used (Has to be LSTM)
         sources ([type]): List of sources
@@ -139,17 +132,16 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
         paths ([type]): List containing paths to the checkpoints
         device ([type]): Which device to run on
         optimizer (str, optional): Optimizer to use. Has to be "SGD" Defaults to "SGD".
-
     Returns:
         [type]: List of influences of sources on targets
     """
     # Loop through all source target combinations
     influences = []
     print("Device is ", device)
-    for i in tqdm(range(len(sources)), desc="Sources"):
+    for i in tqdm(range(len(sources)), desc="Source Progress"):
         source = sources[i]
         source_label = sources_labels[i]
-        for j in range(len(targets)):
+        for j in tqdm(range(len(targets)), desc="Target Progress"):
             target = targets[j]
             target_label = targets_labels[j]
             source = torch.LongTensor(source)
@@ -160,24 +152,6 @@ def run_experiments(model, sources, sources_labels, targets, targets_labels, pat
             influences.append(single_influence.tolist())
     return influences
 
-
-def big_run(file, user, model, sources, sources_labels, targets, targets_labels, paths, device, optimizer="SGD"):
-    # cpu = torch.device("cpu")
-    # sources = sources.to(cpu)
-    # source_labels = sources_labels.to(cpu)
-    # targets = targets.to("cpu")
-    # targets_labels
-    influences = run_experiments(model, sources,  sources_labels, targets, targets_labels, paths, device=device)
-    df = pd.DataFrame(influences).describe().transpose()
-    df['userid'] = user
-    cols = df.columns.tolist()
-    cols = cols[-1:] + cols[:-1]
-    df = df[cols]
-    if user == 0:
-        df.to_csv(file, mode="a+", header=True, index=False)
-    else:
-        df.to_csv(file, mode="a+", header=False, index=False)
-    return
 
 if __name__ == "__main__":
     print("This doesn't do jack")
