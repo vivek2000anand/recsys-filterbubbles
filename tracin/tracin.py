@@ -143,6 +143,10 @@ def calculate_tracin_influence_batch(model, sources, source_labels, targets, tar
     # optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
     # curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1, device=device)
     # curr_model.LSTM.flatten_parameters()
+    sources = [torch.LongTensor(s) for s in sources]
+    targets = [torch.LongTensor(s) for s in targets]
+    source_labels = [torch.LongTensor([s])for s in source_labels]
+    target_labels = [torch.LongTensor([s]) for s in target_labels]
     for model_index in range(num_checkpoints):
         # print("in it")
         curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1, device=device)
