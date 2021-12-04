@@ -1,5 +1,7 @@
 from collections import defaultdict
+
 import numpy as np
+from torch._C import Value
 
 
 def printl(length=80):
@@ -7,7 +9,7 @@ def printl(length=80):
     print(length * "-")
 
 
-def train_valid_test_split(
+def filter_and_split_data(
     data, min_items_per_user=10, train_cutoff=0.8, valid_cutoff=0.9
 ):
     """Takes in NX3 array and returns sequence-like data
@@ -24,32 +26,66 @@ def train_valid_test_split(
                     : (valid_cutoff, 1.0] will be labeled as testing data
 
     """
-    # Only keep users with >= threshold items
+    # 1. Only keep users with >= threshold items
     users, counts = np.unique(data[:, 0], return_counts=True)
     total_items_per_user = {
         user: count for user, count in zip(users, counts) if count >= min_items_per_user
     }
-    count_per_user = defaultdict(int)
+
+    # 2. Sort our user data by time
+    user_to_sequence = defaultdict(list)
+    for user, item, time in data:
+        user_to_sequence[user].append((time, item))
+
+    for val in user_to_sequence.values():
+        val.sort()
 
     new_data = []
+    for user, sequence in user_to_sequence.items():
+        for time, item in sequence:
+            new_data.append([user, item, time])
+    data = new_data
+
+    # 3. Splitting into train, valid, test
+    count_per_user = defaultdict(int)
+    latest_time_per_user = defaultdict(int)
+    new_data = []
+    
     for user, item, time in data:
+        user, item, time = int(user), int(item), int(time)
         if user not in total_items_per_user:
             continue
-        else:
-            total_items = total_items_per_user[user]
+        if time < latest_time_per_user[user]:
+            raise ValueError("Your data by user is not sorted by time!")
 
+        total_items = total_items_per_user[user]
+        latest_time_per_user[user] = time
         count_per_user[user] += 1
+        
 
-        if count_per_user[user] <= train_cutoff * total_items:
+        # Version where we use 1 datapoint for validation, 1 datapoint for test
+        if count_per_user[user] <= total_items - 2:
             new_data.append([user, item, time, 0])
-        elif count_per_user[user] <= valid_cutoff * total_items:
+        elif count_per_user[user] == total_items - 1:
             new_data.append([user, item, time, 1])
-        elif count_per_user[user] <= total_items:
+        elif count_per_user[user] == total_items:
             new_data.append([user, item, time, 2])
         else:
             raise ValueError(
                 "There's a bug in the counting of total items or curr items!"
             )
+
+        # # Original Version
+        # if count_per_user[user] <= train_cutoff * total_items:
+        #     new_data.append([user, item, time, 0])
+        # elif count_per_user[user] <= valid_cutoff * total_items:
+        #     new_data.append([user, item, time, 1])
+        # elif count_per_user[user] <= total_items:
+        #     new_data.append([user, item, time, 2])
+        # else:
+        #     raise ValueError(
+        #         "There's a bug in the counting of total items or curr items!"
+        #     )
 
     return np.array(new_data)
 
@@ -65,19 +101,20 @@ def sequence_generator(data, look_back=50):
 
     train, valid, test = [], [], []
     unique_users = set(data[:, 0])
-    items_per_user = {int(user): [0 for i in range(look_back)] for user in unique_users}
+    items_per_user = {int(user): [0 for _ in range(look_back)] for user in unique_users}
 
-    for (idx, row) in enumerate(data):
-        user, item, time = int(row[0]), int(row[1]), row[2]
-        # The item id increase happens here
+    for user, item, time, split in data:
+        # NOTE: Item ID increase happens here
         items_per_user[user] = items_per_user[user][1:] + [item + 1]
         current_items = items_per_user[user]
-        if row[3] == 0:
+        if split == 0:
             train.append([current_items[:-1], current_items[-1]])
-        elif row[3] == 1:
+        elif split == 1:
             valid.append([current_items[:-1], current_items[-1]])
-        else:
+        elif split == 2:
             test.append([current_items[:-1], current_items[-1]])
+        else:
+            raise ValueError("Some of the data has not been split into train/valid/test!")
 
     return train, valid, test
 
