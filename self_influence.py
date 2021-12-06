@@ -95,7 +95,7 @@ train = [train[i][0] for i in range(len(train))]
 print("Self Influence")
 
 self_influence = approximate_tracin_batched(LSTM, sources=train, targets=train, source_labels=train_labels,
-target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=4096, num_items=5673, device=device)
+target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=2048, num_items=5673, device=device)
 
 
 # In[]
