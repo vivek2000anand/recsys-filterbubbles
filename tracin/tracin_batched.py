@@ -67,7 +67,7 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
         curr_model = model(input_size=128, output_size=num_items, hidden_dim=64, n_layers=1, device=device)
         curr_model.LSTM.flatten_parameters()
         optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
-        curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, num_checkpoints[model_index])
+        curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, paths[model_index])
         lr = get_lr(model_optimizer)
         for i in range(total_length):
             # Get Embeddings
