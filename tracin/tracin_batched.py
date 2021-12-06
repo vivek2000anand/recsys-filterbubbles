@@ -73,32 +73,30 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
         # Get Embeddings
         sources_emb = [curr_model.item_emb(torch.LongTensor(i)).to(device) for i in sources]
         targets_emb = [curr_model.item_emb(torch.LongTensor(i)).to(device) for i in targets]
-        curr_model.to(device)
-        # Run for all inputs
-        for i in range(total_length):
-            criterion = nn.CrossEntropyLoss()
-            # Batch the inputs
-            for iteration in range(int(total_length/batch_size)+1):
-                st_idx,ed_idx = iteration*batch_size, (iteration+1)*batch_size
-                if ed_idx>total_length:
-                    ed_idx = total_length
-                curr_length = ed_idx -st_idx
-                # Sources 
-                optimizer.zero_grad()
-                output, hidden = curr_model.forward(torch.stack([sources_emb[i] for i in range(st_idx,ed_idx)],dim=0).detach())
-                loss = criterion(output, source_labels[st_idx:ed_idx])
-                loss.backward()
-                source_gradients = curr_model.get_gradients(device)
-                # Targets
-                optimizer.zero_grad()
-                output, hidden = curr_model.forward(torch.stack([targets_emb[i] for i in range(st_idx,ed_idx)],dim=0).detach())
-                loss = criterion(output, target_labels[st_idx:ed_idx])
-                loss.backward()
-                target_gradients = curr_model.get_gradients(device)
+        curr_model.to(device)s
+        criterion = nn.CrossEntropyLoss()
+        # Batch the inputs
+        for iteration in range(int(total_length/batch_size)+1):
+            st_idx,ed_idx = iteration*batch_size, (iteration+1)*batch_size
+            if ed_idx>total_length:
+                ed_idx = total_length
+            curr_length = ed_idx -st_idx
+            # Sources 
+            optimizer.zero_grad()
+            output, hidden = curr_model.forward(torch.stack([sources_emb[i] for i in range(st_idx,ed_idx)],dim=0).detach())
+            loss = criterion(output, source_labels[st_idx:ed_idx])
+            loss.backward()
+            source_gradients = curr_model.get_gradients(device)
+            # Targets
+            optimizer.zero_grad()
+            output, hidden = curr_model.forward(torch.stack([targets_emb[i] for i in range(st_idx,ed_idx)],dim=0).detach())
+            loss = criterion(output, target_labels[st_idx:ed_idx])
+            loss.backward()
+            target_gradients = curr_model.get_gradients(device)
 
-                # Get total Influence
-                val = torch.dot(source_gradients, target_gradients)
-                influence += val * lr * (curr_length / total_length)
+            # Get total Influence
+            val = torch.dot(source_gradients, target_gradients)
+            influence += val * lr * (curr_length / total_length)
     end_time = time.time()
     print(f"Total time taken is {end_time - start_time}")
     return influence
