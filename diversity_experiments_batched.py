@@ -158,7 +158,18 @@ target_labels=filter_bubbles_labels, optimizer="SGD", paths=checkpoints, batch_s
 print("Influence is ", influence)
 
 # BIG data
+(train,test, train_items, test_items) = sequence_generator(original_data,look_back)
+test_ground_truth = {i:test[i][1] for i in range(len(test))}
+
+print("Train: {}, Test: {}".format(len(train),len(test)))
+
+train_num,test_num = len(train),len(test)
+train_labels,test_labels = [],[]
+for i in range(len(train)):
+    # Get item embeddings
+    train_labels.append(train[i][1])
+
 train_dummy = [train[i][0] for i in range(len(train))]
-train_labels = train_labels.to("cpu")
+# train_labels = train_labels.to("cpu")
 influence = approximate_tracin_batched(LSTM, sources=train_dummy, targets=train_dummy, source_labels=train_labels,
 target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=128, num_items=5673, device=device)
