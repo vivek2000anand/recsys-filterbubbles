@@ -172,4 +172,4 @@ for i in range(len(train)):
 train_dummy = [train[i][0] for i in range(len(train))]
 # train_labels = train_labels.to("cpu")
 influence = approximate_tracin_batched(LSTM, sources=train_dummy, targets=train_dummy, source_labels=train_labels,
-target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=2048, num_items=5673, device=device)
+target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=4096, num_items=5673, device=device)
