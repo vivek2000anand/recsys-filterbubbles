@@ -73,7 +73,7 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
         # Get Embeddings
         sources_emb = [curr_model.item_emb(torch.LongTensor(i)).to(device) for i in sources]
         targets_emb = [curr_model.item_emb(torch.LongTensor(i)).to(device) for i in targets]
-        curr_model.to(device)s
+        curr_model.to(device)
         criterion = nn.CrossEntropyLoss()
         # Batch the inputs
         for iteration in range(int(total_length/batch_size)+1):
