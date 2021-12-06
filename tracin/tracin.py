@@ -5,6 +5,7 @@ from torch.optim import SGD
 from copy import deepcopy
 from torch import nn
 from tqdm import tqdm
+import time
 
 def save_tracin_checkpoint(model, epoch, loss, optimizer, path):
     """Saves a checkpoint for tracin to a path
@@ -147,6 +148,7 @@ def calculate_tracin_influence_batch(model, sources, source_labels, targets, tar
     targets = [torch.LongTensor(s) for s in targets]
     source_labels = [torch.LongTensor([s]).to(device) for s in source_labels]
     target_labels = [torch.LongTensor([s]).to(device) for s in target_labels]
+
     for model_index in range(num_checkpoints):
         curr_model = model(input_size=128, output_size=5673, hidden_dim=64, n_layers=1, device=device)
         curr_model.LSTM.flatten_parameters()
