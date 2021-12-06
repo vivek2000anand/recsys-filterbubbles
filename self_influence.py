@@ -13,6 +13,7 @@ from LSTM_clean.model import LSTM
 import numpy as np
 import re
 from statistics import mean
+import scipy.stats as stats
 from sklearn.utils import shuffle
 from copy import deepcopy
 
@@ -97,18 +98,27 @@ train_copy = deepcopy(train)
 train_labels_copy = deepcopy(train_labels)
 
 # In[]
-print("Self Influence")
-print("____________________________________________________________")
 
-self_influence = approximate_tracin_batched(LSTM, sources=train, targets=train, source_labels=train_labels,
-target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=2048, num_items=5673, device=device)
-print(f"Self influence is: {self_influence}")
+si = []
+ri =[]
 
-# In[]
-print("Random Sample")
-print("____________________________________________________________")
-for i in range(5):
+for i in range(20):
+    print("___________________________________________________________________________________")
+    print(f"Iteration {i}")
+    train_random, train_labels_random = shuffle(train_copy, train_labels_copy, random_state=i)
+    self_influence = approximate_tracin_batched(LSTM, sources=train_random, targets=train_random, source_labels=train_labels_random, target_labels=train_labels_random, optimizer="SGD", paths=checkpoints, batch_size=2048, num_items=5673, device=device)
+    print(f"Self influence is: {self_influence}")
+    si.append(self_influence)
     train_random, train_labels_random = shuffle(train_copy, train_labels_copy, random_state=i)
     rs = approximate_tracin_batched(LSTM, sources=train, targets=train_random, source_labels=train_labels, target_labels=train_labels_random, optimizer="SGD", paths=checkpoints, batch_size=2048, num_items=5673, device=device)
     print(f"Random Sample {i} Influence is {rs}")
+    ri.append(rs)
 
+# In[]
+print(f"Difference in population is {stats.ttest_ind(a=np.array(si), b=np.array(ri), equal_var=False)}")
+
+print("Self Influences are {si}")
+print("Random Influences are {ri}")
+
+
+# %%
