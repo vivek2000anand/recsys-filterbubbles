@@ -52,7 +52,7 @@ def get_lr(optimizer):
         return param_group['lr']
 
 
-def approximate_tracin_batched(model, sources, source_labels, targets, target_labels, paths, devices, batch_size=128, num_items=5673, optimizer="SGD"):
+def approximate_tracin_batched(model, sources, source_labels, targets, target_labels, paths, device, batch_size=128, num_items=5673, optimizer="SGD"):
     total_length = len(sources)
     num_checkpoints = len(paths)
     # Initialization
@@ -64,7 +64,7 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
     influence = 0
     for model_index in range(num_checkpoints):
         # Initialize model
-        curr_model = model(input_size=128, num_items=5673, hidden_dim=64, n_layers=1, device=device)
+        curr_model = model(input_size=128, output_size=num_items, hidden_dim=64, n_layers=1, device=device)
         curr_model.LSTM.flatten_parameters()
         optimizer = SGD(curr_model.parameters(), lr=5e-2, momentum=0.9)
         curr_model, model_optimizer, _, _ = load_tracin_checkpoint(curr_model,optimizer, num_checkpoints[model_index])
