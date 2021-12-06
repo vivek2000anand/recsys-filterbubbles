@@ -1,4 +1,5 @@
 from collections import defaultdict
+import pickle
 
 import numpy as np
 from torch._C import Value
@@ -7,6 +8,7 @@ from torch._C import Value
 def printl(length=80):
     """Prents a horizontal line for prettier debugging"""
     print(length * "-")
+
 
 
 def filter_and_split_data(
@@ -64,40 +66,35 @@ def filter_and_split_data(
         
 
         # Version where we use 1 datapoint for validation, 1 datapoint for test
-        if count_per_user[user] <= total_items - 2:
-            new_data.append([user, item, time, 0])
-        elif count_per_user[user] == total_items - 1:
-            new_data.append([user, item, time, 1])
-        elif count_per_user[user] == total_items:
-            new_data.append([user, item, time, 2])
-        else:
-            raise ValueError(
-                "There's a bug in the counting of total items or curr items!"
-            )
-
-        # # Original Version
-        # if count_per_user[user] <= train_cutoff * total_items:
+        # if count_per_user[user] <= total_items - 2:
         #     new_data.append([user, item, time, 0])
-        # elif count_per_user[user] <= valid_cutoff * total_items:
+        # elif count_per_user[user] == total_items - 1:
         #     new_data.append([user, item, time, 1])
-        # elif count_per_user[user] <= total_items:
+        # elif count_per_user[user] == total_items:
         #     new_data.append([user, item, time, 2])
         # else:
         #     raise ValueError(
         #         "There's a bug in the counting of total items or curr items!"
         #     )
 
+        # Original Version
+        if count_per_user[user] <= train_cutoff * total_items:
+            new_data.append([user, item, time, 0])
+        elif count_per_user[user] <= valid_cutoff * total_items:
+            new_data.append([user, item, time, 1])
+        elif count_per_user[user] <= total_items:
+            new_data.append([user, item, time, 2])
+        else:
+            raise ValueError(
+                "There's a bug in the counting of total items or curr items!"
+            )
+
     return np.array(new_data)
 
 
 # NOTE: Sequence generator already increases item ids by 1!
 def sequence_generator(data, look_back=50):
-
-    """\
-    Description:
-    ------------
-        Input data for LSTM: Convert to user trajectory (maximum length: look back)
-    """
+    """Takes in data and converts to user trajectory"""
 
     train, valid, test = [], [], []
     unique_users = set(data[:, 0])
@@ -106,6 +103,7 @@ def sequence_generator(data, look_back=50):
     for user, item, time, split in data:
         # NOTE: Item ID increase happens here
         items_per_user[user] = items_per_user[user][1:] + [item + 1]
+        # items_per_user[user] = items_per_user[user][1:] + [item]
         current_items = items_per_user[user]
         if split == 0:
             train.append([current_items[:-1], current_items[-1]])
@@ -117,6 +115,61 @@ def sequence_generator(data, look_back=50):
             raise ValueError("Some of the data has not been split into train/valid/test!")
 
     return train, valid, test
+
+def reindex_and_save_communities(train_data, valid_data, test_data, original_df):
+    """Fills in gaps between item ids to match the LSTM indices, saves a community dict using the original df
+    
+    NOTE: The data has already been incremented by 1 from the sequence_generator due to 0 padding
+          This means that the mapping back to the df itemids needs to fill in the gaps and subtract 1
+    """
+    # NOTE: it is very important that this is a reference because we use all_data to reindex the elements in train, valid, test
+    all_data = train_data + valid_data + test_data
+    assert len(all_data) == len(train_data) + len(valid_data) + len(test_data)
+
+    #### 1. GET ALL UNIQUE ITEMS AND REMOVE GAPS FROM ITEMS
+    # Union all items from sequence
+    unique_items = set()
+    for data_point in all_data:
+        unique_items |= set(data_point[0])
+    # Union all GT items
+    unique_items = unique_items.union(data_point[1] for data_point in all_data)
+
+    # Remove gaps from items
+    item_to_lstm_idx = {item:idx for (idx, item) in enumerate(unique_items)}
+    # NOTE: Crucially, we decrement by 1 in the reverse dict, and exclude the 0 padding item
+    lstm_idx_to_df_item = {v: k - 1 for k, v in item_to_lstm_idx.items() if v != 0}
+    
+    #### 2. REINDEX THE ITEMS IN THE DATASET
+    # Apply mapping on the data
+    for data_point in all_data:
+        sequence = data_point[0]
+        gt = data_point[1]
+        for i, item in enumerate(sequence):
+            sequence[i] = item_to_lstm_idx[item]
+        data_point[1] = item_to_lstm_idx[gt]
+
+    ### 3. COMPUTE REINDEXED ITEMS TO COMMUNITY
+    lstm_idx_to_community = {}
+    df = original_df.groupby(['streamer_name', 'community'], as_index=False).size()
+    df_item_to_community = dict(zip(df.streamer_name, df.community))
+    for lstm_idx, df_item in lstm_idx_to_df_item.items():
+        lstm_idx_to_community[lstm_idx] = df_item_to_community[df_item]
+
+
+    ### 4. Checks on our dictionaries
+    # Min of df is 0
+    assert min(lstm_idx_to_df_item.values()) == 0
+    # Min of lstm_idx mapping is 1
+    assert min(lstm_idx_to_df_item.keys()) == 1
+
+    return lstm_idx_to_community, unique_items, item_to_lstm_idx, lstm_idx_to_df_item
+
+
+def load_community_dict(file_path):
+    """Opens a pickled dictionary"""
+    with open('file_path', "rb") as f:
+        hm = pickle.load(f)
+    return hm
 
 
 def get_diversity(prev_item_communities, predicted_item_communities, bounds=0.1):

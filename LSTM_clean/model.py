@@ -9,6 +9,7 @@ import os
 import time
 import copy
 from tracin.tracin import save_tracin_checkpoint
+from copy import deepcopy
 
 
 class LSTM(nn.Module):
@@ -119,6 +120,9 @@ class LSTM(nn.Module):
         return MRR / test_num, HITS / test_num, loss / test_num, probs
 
     def traintest(self, train, test, epochs):
+        # NOTE: Added this deep copy
+        train = deepcopy(train)
+        test = deepcopy(test)
 
         train_num, test_num = len(train), len(test)
         train_labels, test_labels = [], []
@@ -178,6 +182,7 @@ class LSTM(nn.Module):
             if epoch % 10 == 0:
                 path = os.getcwd()
                 fname = path + "/checkpoints/lstm_checkpoint_epoch" + str(epoch) + ".pt"
+                print(f"saving checkpoint to {fname}")
                 save_tracin_checkpoint(self, epoch, train_loss, optimizer, fname)
 
         return test_prediction
