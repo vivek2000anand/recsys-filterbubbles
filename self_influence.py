@@ -27,7 +27,7 @@ last_checkpoint_epoch = max([int(re.sub('[^0-9]','', a)[2:]) for a in checkpoint
 last_checkpoint = sorted(checkpoints)[-1][:-5] + str(last_checkpoint_epoch) + ".pt"
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]='0'
+os.environ["CUDA_VISIBLE_DEVICES"]='6'
 
 cpu_device = torch.device("cpu")
 print("CPU Device is ", cpu_device)
