@@ -1,4 +1,5 @@
 import torch
+from torch.cuda import random
 import torch.nn as nn
 import torch.nn.functional as F
 import os
@@ -12,6 +13,8 @@ from LSTM_clean.model import LSTM
 import numpy as np
 import re
 from statistics import mean
+from sklearn.utils import shuffle
+from copy import deepcopy
 
 
 curr_dir = os.getcwd()
@@ -90,13 +93,22 @@ for i in range(len(train)):
 train = [train[i][0] for i in range(len(train))]
 
 
+train_copy = deepcopy(train)
+train_labels_copy = deepcopy(train_labels)
 
 # In[]
 print("Self Influence")
+print("____________________________________________________________")
 
 self_influence = approximate_tracin_batched(LSTM, sources=train, targets=train, source_labels=train_labels,
 target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=2048, num_items=5673, device=device)
-
+print(f"Self influence is: {self_influence}")
 
 # In[]
-print("Random Sample 1")
+print("Random Sample")
+print("____________________________________________________________")
+for i in range(5):
+    train_random, train_labels_random = shuffle(train_copy, train_labels_copy, random_state=i)
+    rs = approximate_tracin_batched(LSTM, sources=train, targets=train_random, source_labels=train_labels, target_labels=train_labels_random, optimizer="SGD", paths=checkpoints, batch_size=2048, num_items=5673, device=device)
+    print(f"Random Sample {i} Influence is {rs}")
+
