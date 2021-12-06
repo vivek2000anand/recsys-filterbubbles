@@ -63,6 +63,7 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
     start_time = time.time()
     influence = 0
     for model_index in range(num_checkpoints):
+        print(f"In checkpoint number: {model_index}")
         # Initialize model
         curr_model = model(input_size=128, output_size=num_items, hidden_dim=64, n_layers=1, device=device)
         curr_model.LSTM.flatten_parameters()

@@ -156,3 +156,9 @@ for i in range(len(total_diversity)):
 influence = approximate_tracin_batched(LSTM, sources=filter_bubbles, targets=filter_bubbles, source_labels=filter_bubbles_labels,
 target_labels=filter_bubbles_labels, optimizer="SGD", paths=checkpoints, batch_size=128, num_items=5673, device=device)
 print("Influence is ", influence)
+
+# BIG data
+train_dummy = [train[i][0] for i in range(len(train))]
+train_labels = train_labels.to("cpu")
+influence = approximate_tracin_batched(LSTM, sources=train_dummy, targets=train_dummy, source_labels=train_labels,
+target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=128, num_items=5673, device=device)
