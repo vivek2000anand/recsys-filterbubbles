@@ -1,8 +1,15 @@
+"""This file should probably be refactored
+
+Contains a lot of utils for manipulating data and preparing data for training
+
+Also contains utils for analysis"""
+
 from collections import defaultdict
 import pickle
 
 import numpy as np
-from torch._C import Value
+
+
 
 
 def printl(length=80):
@@ -167,9 +174,16 @@ def reindex_and_save_communities(train_data, valid_data, test_data, original_df)
 
 def load_community_dict(file_path):
     """Opens a pickled dictionary"""
-    with open('file_path', "rb") as f:
+    with open(file_path, "rb") as f:
         hm = pickle.load(f)
     return hm
+
+def get_communities(sequence, community_dict):
+    """Takes in sequence of items and returns list of communties
+
+    The padding_idx should NOT have a mapping in the community_dict
+    """
+    return [community_dict[item] for item in sequence if item in community_dict]
 
 
 def get_diversity(prev_item_communities, predicted_item_communities, bounds=0.1):

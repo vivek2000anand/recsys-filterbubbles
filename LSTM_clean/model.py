@@ -86,7 +86,7 @@ class LSTM(nn.Module):
         """
         test_num = len(test)
         MRR, HITS, loss = 0, 0, 0
-        probs = {} # variable used to store probabilities?
+        probs = {}  # variable used to store probabilities?
         criterion = nn.CrossEntropyLoss()
         for iteration in range(int(test_num / self.batch_size) + 1):
             st_idx, ed_idx = (
@@ -119,7 +119,7 @@ class LSTM(nn.Module):
         # print("outputs1 shape is ", output1.size())
         return MRR / test_num, HITS / test_num, loss / test_num, probs
 
-    def traintest(self, train, test, epochs):
+    def traintest(self, train, test, epochs, learning_rate=5e-3, momentum=0.9):
         # NOTE: Added this deep copy
         train = deepcopy(train)
         test = deepcopy(test)
@@ -137,14 +137,14 @@ class LSTM(nn.Module):
             test_labels.append(test[i][1])
         test_labels = torch.LongTensor(test_labels).to(self.device)
 
-        print("train # = {}\ttest # = {}".format(train_num, test_num))
+        # print("train # = {}\ttest # = {}".format(train_num, test_num))
+        print(f"train # = {train_num}, test # = {test_num}\n")
 
         criterion = nn.CrossEntropyLoss()
-        learning_rate = 5e-3
-        optimizer = optim.SGD(self.parameters(), lr=learning_rate, momentum=0.9)
+        optimizer = optim.SGD(self.parameters(), lr=learning_rate, momentum=momentum)
 
         start_time = time.time()
-        for epoch in range(epochs):
+        for epoch in range(0, epochs + 1):
             train_loss = 0
             for iteration in range(int(train_num / self.batch_size) + 1):
                 st_idx, ed_idx = (
