@@ -83,13 +83,13 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
                 curr_length = ed_idx -st_idx
                 # Sources 
                 optimizer.zero_grad()
-                output, hidden = curr_model.forward(torch.stack([sources_emb for i in range(st_idx,ed_idx)],dim=0).detach())
+                output, hidden = curr_model.forward(torch.stack([sources_emb[i] for i in range(st_idx,ed_idx)],dim=0).detach())
                 loss = criterion(output, source_labels[st_idx:ed_idx])
                 loss.backward()
                 source_gradients = curr_model.get_gradients(device)
                 # Targets
                 optimizer.zero_grad()
-                output, hidden = curr_model.forward(torch.stack([targets_emb for i in range(st_idx,ed_idx)],dim=0).detach())
+                output, hidden = curr_model.forward(torch.stack([targets_emb[i] for i in range(st_idx,ed_idx)],dim=0).detach())
                 loss = criterion(output, target_labels[st_idx:ed_idx])
                 loss.backward()
                 target_gradients = curr_model.get_gradients(device)
