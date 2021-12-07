@@ -11,7 +11,7 @@ import os
 import torch.optim as optim
 from os import listdir
 from os.path import isfile, join
-from tracin.tracin_batched import save_tracin_checkpoint, load_tracin_checkpoint,  approximate_tracin_batched
+from tracin.tracin_batched import save_tracin_checkpoint, load_tracin_checkpoint, approximate_tracin_batched
 import pandas as pd
 from LSTM_clean.utils import train_test_split, sequence_generator, get_diversity
 from LSTM_clean.model import LSTM
