@@ -72,6 +72,7 @@ def get_points(x, x_label, y, y_labels):
     source_labels = [c[0][1] for c in combos]
     targets = [c[1][0] for c in combos]
     target_labels = [c[1][1] for c in combos]
+    print(f"Number of datapoints {len(sources)}")
     return sources, source_labels, targets, target_labels
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
@@ -91,6 +92,7 @@ for i in range(50):
     start_length_time = time.time()
     valid_subset, valid_labels_subset = get_valid_subset(i, valid, valid_labels, valid_lengths)
     if len(valid_subset) != 0:
+        print("About to cartesian product")
         sources, source_labels, targets, target_labels = get_points(valid, valid_labels, train, train_labels)
         influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=4000, num_items=OUTPUT_SIZE, device=device)
         influences.append(influence)
