@@ -23,7 +23,7 @@ from sklearn.utils import shuffle
 from copy import deepcopy
 import time
 
-OUTPUT_SIZE = 3312
+OUTPUT_SIZE = 5673
 NUM_TRAIN_SAMPLES = 100
 NUM_VAL_SAMPLES = 10
 NUM_REPETITIONS = 20
