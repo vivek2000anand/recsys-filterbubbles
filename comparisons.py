@@ -30,7 +30,7 @@ NUM_REPETITIONS = 20
 STEP_SIZE = 2
 BATCH_SIZE = 4096
 TRAIN_NAME = "filter"
-TEST_NAME = "filter"
+TEST_NAME = "breaking"
 
 def get_checkpoints():
     curr_dir = os.getcwd()
