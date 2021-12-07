@@ -113,7 +113,7 @@ for h in range(NUM_REPETITIONS):
         train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths)
         if len(train_subset) != 0:
             print("About to cartesian product")
-            sources, source_labels, targets, target_labels = get_points(train, train_labels, valid, valid_labels, x_num_sample=NUM_TRAIN_SAMPLES, y_num_sample=NUM_VAL_SAMPLES, seed=h)
+            sources, source_labels, targets, target_labels = get_points(train_subset, train_labels_subset, valid, valid_labels, x_num_sample=NUM_TRAIN_SAMPLES, y_num_sample=NUM_VAL_SAMPLES, seed=h)
             print("About to tracin")
             influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=BATCH_SIZE, num_items=OUTPUT_SIZE, device=device)
             influences[i]= influences[i].append(influence)
