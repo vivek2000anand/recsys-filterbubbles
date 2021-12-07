@@ -116,11 +116,11 @@ for h in range(NUM_REPETITIONS):
             sources, source_labels, targets, target_labels = get_points(train_subset, train_labels_subset, valid, valid_labels, x_num_sample=NUM_TRAIN_SAMPLES, y_num_sample=NUM_VAL_SAMPLES, seed=h)
             print("About to tracin")
             influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=BATCH_SIZE, num_items=OUTPUT_SIZE, device=device)
-            influences[i]= influences[i].append(influence)
+            influences[i].append(influence)
             end_length_time = time.time()
             print(f"Influence for length {i} is : {influence} \nTime elapsed {end_length_time-start_length_time}")
         else:
-            influences[i] = influences[i].append(-1)
+            influences[i].append(-1)
     outer_end_time = time.time()
     print(f"Outer Iteration {h} has ended with {outer_end_time-outer_start_time} time taken")
     print("_______________________________________________________________________________")
@@ -128,4 +128,4 @@ for h in range(NUM_REPETITIONS):
 print(f"Influences are \n{influences}")
 
 with open("length_influences1_dict.pkl", 'wb') as f:
-    pickle.dump(influences, influences)
+    pickle.dump(influences, f)
