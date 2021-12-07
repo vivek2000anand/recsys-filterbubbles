@@ -23,6 +23,9 @@ from copy import deepcopy
 import time
 
 OUTPUT_SIZE = 3312
+NUM_TRAIN_SAMPLES = 50
+NUM_REPETITIONS = 20
+STEP_SIZE = 5
 
 def get_checkpoints():
     curr_dir = os.getcwd()
@@ -86,15 +89,15 @@ checkpoints = get_checkpoints()
 train, train_labels, valid, valid_labels = get_train_validation()
 train_lengths = [get_length(i) for i in train]
 
-influences = {i:[] for i in range(0,50,5)}
+influences = {i:[] for i in range(0,50,STEP_SIZE)}
 start_time = time.time()
 print("About to start running")
-for h in range(20):
+for h in range(NUM_REPETITIONS):
     outer_start_time = time.time()
     print(f"Starting outer loop with {h}")
-    for i in range(0, 50, 5):
+    for i in range(0, 50, STEP_SIZE):
         start_length_time = time.time()
-        train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths, num_sample=100, seed=h)
+        train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths, num_sample=NUM_TRAIN_SAMPLES, seed=h)
         if len(train_subset) != 0:
             print("About to cartesian product")
             sources, source_labels, targets, target_labels = get_points(valid, valid_labels, train, train_labels)
