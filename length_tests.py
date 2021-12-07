@@ -101,13 +101,13 @@ checkpoints = get_checkpoints()
 train, train_labels, valid, valid_labels = get_train_validation()
 train_lengths = [get_length(i) for i in train]
 
-influences = {i:[] for i in range(0,50,STEP_SIZE)}
+influences = {i:[] for i in range(1,50,STEP_SIZE)}
 start_time = time.time()
 print("About to start running")
 for h in range(NUM_REPETITIONS):
     outer_start_time = time.time()
     print(f"Starting outer loop with {h}")
-    for i in range(0, 50, STEP_SIZE):
+    for i in range(1, 50, STEP_SIZE):
         start_length_time = time.time()
         train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths)
         if len(train_subset) != 0:
