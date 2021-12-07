@@ -52,7 +52,7 @@ def get_lr(optimizer):
         return param_group['lr']
 
 
-def approximate_tracin_batched(model, sources, source_labels, targets, target_labels, paths, device, batch_size=2048, num_items=5673, optimizer="SGD"):
+def approximate_tracin_batched(model, sources, source_labels, targets, target_labels, paths, device, num_items=5673, batch_size=2048, optimizer="SGD"):
     total_length = len(sources)
     num_checkpoints = len(paths)
     # Initialization
