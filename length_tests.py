@@ -24,9 +24,9 @@ from copy import deepcopy
 import time
 
 OUTPUT_SIZE = 3312
-NUM_TRAIN_SAMPLES = 100
+NUM_TRAIN_SAMPLES = 200
 NUM_VAL_SAMPLES = 100
-NUM_REPETITIONS = 20
+NUM_REPETITIONS = 30
 STEP_SIZE = 1
 
 def get_checkpoints():
