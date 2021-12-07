@@ -181,7 +181,7 @@ class LSTM(nn.Module):
                 start_time = time.time()
             if epoch % 10 == 0:
                 path = os.getcwd()
-                fname = path + "/checkpoints/lstm_checkpoint_epoch" + str(epoch) + ".pt"
+                fname = path + "/checkpoints_v2/lstm_checkpoint_epoch" + str(epoch) + ".pt"
                 print(f"saving checkpoint to {fname}")
                 save_tracin_checkpoint(self, epoch, train_loss, optimizer, fname)
 

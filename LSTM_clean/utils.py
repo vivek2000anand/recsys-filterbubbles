@@ -4,18 +4,15 @@ Contains a lot of utils for manipulating data and preparing data for training
 
 Also contains utils for analysis"""
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 import pickle
-
 import numpy as np
-
-
+import math
 
 
 def printl(length=80):
     """Prents a horizontal line for prettier debugging"""
     print(length * "-")
-
 
 
 def filter_and_split_data(
@@ -59,7 +56,7 @@ def filter_and_split_data(
     count_per_user = defaultdict(int)
     latest_time_per_user = defaultdict(int)
     new_data = []
-    
+
     for user, item, time in data:
         user, item, time = int(user), int(item), int(time)
         if user not in total_items_per_user:
@@ -70,7 +67,6 @@ def filter_and_split_data(
         total_items = total_items_per_user[user]
         latest_time_per_user[user] = time
         count_per_user[user] += 1
-        
 
         # Version where we use 1 datapoint for validation, 1 datapoint for test
         # if count_per_user[user] <= total_items - 2:
@@ -119,13 +115,23 @@ def sequence_generator(data, look_back=50):
         elif split == 2:
             test.append([current_items[:-1], current_items[-1]])
         else:
-            raise ValueError("Some of the data has not been split into train/valid/test!")
+            raise ValueError(
+                "Some of the data has not been split into train/valid/test!"
+            )
 
     return train, valid, test
 
-def reindex_and_save_communities(train_data, valid_data, test_data, original_df, item_key='streamer_name', community_key='community'):
+
+def reindex_and_save_communities(
+    train_data,
+    valid_data,
+    test_data,
+    original_df,
+    item_key="streamer_name",
+    community_key="community",
+):
     """Fills in gaps between item ids to match the LSTM indices, saves a community dict using the original df
-    
+
     NOTE: The data has already been incremented by 1 from the sequence_generator due to 0 padding
           This means that the mapping back to the df itemids needs to fill in the gaps and subtract 1
     """
@@ -142,10 +148,10 @@ def reindex_and_save_communities(train_data, valid_data, test_data, original_df,
     unique_items = unique_items.union(data_point[1] for data_point in all_data)
 
     # Remove gaps from items
-    item_to_lstm_idx = {item:idx for (idx, item) in enumerate(unique_items)}
+    item_to_lstm_idx = {item: idx for (idx, item) in enumerate(unique_items)}
     # NOTE: Crucially, we decrement by 1 in the reverse dict, and exclude the 0 padding item
     lstm_idx_to_df_item = {v: k - 1 for k, v in item_to_lstm_idx.items() if v != 0}
-    
+
     #### 2. REINDEX THE ITEMS IN THE DATASET
     # Apply mapping on the data
     for data_point in all_data:
@@ -162,7 +168,6 @@ def reindex_and_save_communities(train_data, valid_data, test_data, original_df,
     for lstm_idx, df_item in lstm_idx_to_df_item.items():
         lstm_idx_to_community[lstm_idx] = df_item_to_community[df_item]
 
-
     ### 4. Checks on our dictionaries
     # Min of df is 0
     assert min(lstm_idx_to_df_item.values()) == 0
@@ -178,6 +183,7 @@ def load_community_dict(file_path):
         hm = pickle.load(f)
     return hm
 
+
 def get_communities(sequence, community_dict):
     """Takes in sequence of items and returns list of communties
 
@@ -186,36 +192,38 @@ def get_communities(sequence, community_dict):
     return [community_dict[item] for item in sequence if item in community_dict]
 
 
-def get_diversity(prev_item_communities, predicted_item_communities, bounds=0.1):
-    """Generates diversity of the recommendations
+def num_unique(communities, *args, **kwargs):
+    """Returns the number of unique communities"""
+    return len(set(communities))
 
-    Args:
-        prev_item_communities ([type]): List of communities of the immediate previous items
-        predicted_item_communities ([type]): List of topk communities of current items
-        bounds (float, optional): Percentage for diverse or moderate. Defaults to 0.1.
-
-    Returns:
-        [type]: [description]
-    """
-    assert bounds < 1 and bounds > 0
-    diversity = []
-    top_length = len(predicted_item_communities[-1])
-    for prev_item, pred_items in zip(prev_item_communities, predicted_item_communities):
-        sum = 0
-        # We check if the previous item community is the same as those in the topk predicted
-        for item in pred_items:
-            if prev_item == item:
-                sum += 1
-        if sum >= (1 - bounds) * top_length:
-            # Too many within the same community (filter bubble)
-            diversity.append(-1)
-        elif sum <= bounds * top_length:
-            # Very diverse recommendations
-            diversity.append(1)
+def shannon_index(communities, community_dict):
+    """This is a metric of intra-list diversity https://en.wikipedia.org/wiki/Diversity_index#Shannon_index"""
+    richness = len(set(community_dict.values()))
+    hm_communities = Counter(communities)
+    ans = 0
+    for label in range(richness):
+        if label in hm_communities:
+            p = hm_communities[i] / len(communities)
+            ans += p * math.log(p)
         else:
-            # Neither filter bubble or very diverse
-            diversity.append(0)
-        print("New Item:")
-        print("Prev Items: ", prev_item)
-        print("Predicted Items: ", pred_items)
-    return diversity
+            ans += 0
+    return -ans
+
+def simpson_index(communities, community_dict):
+    """Gives more weight to dominant topics
+    
+    The original Simpson index λ equals the probability that two entities taken 
+    at random from the dataset of interest (with replacement) represent the same type."""
+    richness = len(set(community_dict.values()))
+    hm_communities = Counter(communities)
+    ans = 0
+    for label in range(richness):
+        if label in hm_communities:
+            p = hm_communities[label] / len(communities)
+            ans += p*p
+        else:
+            ans += 0
+    return ans
+                   
+def gini_simpson_index(communities, community_dict):
+    return 1 - simpson_index(communities, community_dict)
