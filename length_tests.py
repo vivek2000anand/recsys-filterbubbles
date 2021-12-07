@@ -19,12 +19,14 @@ import re
 from statistics import mean
 import scipy.stats as stats
 from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 from copy import deepcopy
 import time
 
 OUTPUT_SIZE = 3312
-NUM_TRAIN_SAMPLES = 50
+NUM_TRAIN_SAMPLES = 100
 NUM_REPETITIONS = 20
+NUM_SUBSET = 10000
 STEP_SIZE = 5
 
 def get_checkpoints():
@@ -53,7 +55,7 @@ def get_train_validation():
     valid_labels = [t[1] for t in valid_data]
     return train, train_labels, valid, valid_labels
 
-def get_train_subset(length, x, x_labels, train_lengths, num_sample=100, seed=10):
+def get_train_subset(length, x, x_labels, train_lengths, num_sample=100, subset_size=10000, seed=10):
     x_subset =[]
     x_labels_subset = []
     for i in range(len(valid)):
@@ -61,7 +63,11 @@ def get_train_subset(length, x, x_labels, train_lengths, num_sample=100, seed=10
             x_subset.append(x[i])
             x_labels_subset.append(x_labels[i])
     x_subset, _, x_labels_subset, _ = train_test_split(x_subset, x_labels_subset, train_size=num_sample, random_state=seed)
-    return x_subset, x_labels_subset
+    x_subset, x_labels_subset = shuffle(x_subset, x_labels_subset, random_state=seed)
+    if len(x_subset) > subset_size:
+        return x_subset[:subset_size], x_labels_subset[:subset_size]
+    else:
+        return x_subset, x_labels_subset
 
 def get_length(data_point):
     for i in range(len(data_point)):
