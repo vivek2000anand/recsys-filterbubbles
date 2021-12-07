@@ -60,6 +60,8 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
     targets = [torch.LongTensor(s) for s in targets]
     source_labels = torch.LongTensor(source_labels).to(device)
     target_labels = torch.LongTensor(target_labels).to(device)
+    print(f"Source labels shape is {source_labels.shape}")
+    print(f"Target labels shape is {target_labels.shape}")
     start_time = time.time()
     influence = 0
     for model_index in range(num_checkpoints):
