@@ -18,7 +18,7 @@ from LSTM_clean.model import LSTM
 import re
 from statistics import mean
 import scipy.stats as stats
-from sklearn.utils import shuffle
+from sklearn.model_selection import train_test_split
 from copy import deepcopy
 import time
 
@@ -50,14 +50,15 @@ def get_train_validation():
     valid_labels = [t[1] for t in valid_data]
     return train, train_labels, valid, valid_labels
 
-def get_valid_subset(length, valid, valid_labels, valid_lengths):
-    valid_subset =[]
-    valid_labels_subset = []
+def get_train_subset(length, x, x_labels, train_lengths, num_sample=100, seed=10):
+    x_subset =[]
+    x_labels_subset = []
     for i in range(len(valid)):
-        if valid_lengths[i] == length:
-            valid_subset.append(valid[i])
-            valid_labels_subset.append(valid_labels[i])
-    return valid_subset, valid_labels_subset
+        if train_lengths[i] == length:
+            x_subset.append(x[i])
+            x_labels_subset.append(x_labels[i])
+    x_subset, _, x_labels_subset, _ = train_test_split(x_subset, x_labels_subset, train_size=num_sample, random_state=seed)
+    return x_subset, x_labels_subset
 
 def get_length(data_point):
     for i in range(len(data_point)):
@@ -66,8 +67,8 @@ def get_length(data_point):
     return 0
 
 
-def get_points(x, x_label, y, y_labels):
-    combos = list(product(zip(valid_subset, valid_labels_subset), zip(train, train_labels)))
+def get_points(x, x_label, y, y_label):
+    combos = list(product(zip(x, x_label), zip(y, y_label)))
     sources = [c[0][0] for c in combos]
     source_labels = [c[0][1] for c in combos]
     targets = [c[1][0] for c in combos]
@@ -83,22 +84,31 @@ print("device is ", device)
 
 checkpoints = get_checkpoints()
 train, train_labels, valid, valid_labels = get_train_validation()
-valid_lengths = [get_length(i) for i in valid]
+train_lengths = [get_length(i) for i in train]
 
-influences = []
+influences = {i:[] for i in range(0,50,5)}
 start_time = time.time()
 print("About to start running")
-for i in range(50):
-    start_length_time = time.time()
-    valid_subset, valid_labels_subset = get_valid_subset(i, valid, valid_labels, valid_lengths)
-    if len(valid_subset) != 0:
-        print("About to cartesian product")
-        sources, source_labels, targets, target_labels = get_points(valid, valid_labels, train, train_labels)
-        influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=4000, num_items=OUTPUT_SIZE, device=device)
-        influences.append(influence)
-        end_length_time = time.time()
-        print(f"Influence for length {i} is : {influence} \nTime elapsed {end_length_time-start_length_time}")
-    else:
-        influences.append(-1)
+for h in range(20):
+    outer_start_time = time.time()
+    print(f"Starting outer loop with {h}")
+    for i in range(0, 50, 5):
+        start_length_time = time.time()
+        train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths, num_sample=100, seed=h)
+        if len(train_subset) != 0:
+            print("About to cartesian product")
+            sources, source_labels, targets, target_labels = get_points(valid, valid_labels, train, train_labels)
+            influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=4000, num_items=OUTPUT_SIZE, device=device)
+            influences[i]= influences[i].append(influence)
+            end_length_time = time.time()
+            print(f"Influence for length {i} is : {influence} \nTime elapsed {end_length_time-start_length_time}")
+        else:
+            influences[i] = influences[i].append(-1)
+    outer_end_time = time.time()
+    print(f"Outer Iteration {h} has ended with {outer_end_time-outer_start_time} time taken")
+    print("_______________________________________________________________________________")
 
 print(f"Influences are \n{influences}")
+
+with open("length_influences_dict.pkl", 'wb') as f:
+    pickle.dump(influences, influences)
