@@ -94,6 +94,8 @@ def get_length(data_point):
 
 
 def get_points(x, x_label, y, y_label,x_num_sample =100, y_num_sample=10, seed=69):
+    print(f"length of x is {len(x)}, {len(x_label)}")
+    print(f"length of y is {len(y)}, {len(y_label)}")
     x, x_label = shuffle(x, x_label, random_state= seed)
     y, y_label = shuffle(y, y_label, random_state=seed)
     if len(x) > x_num_sample:
