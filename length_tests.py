@@ -53,6 +53,8 @@ def get_train_validation():
     train_labels = [t[1] for t in train_data]
     valid = [t[0] for t in valid_data]
     valid_labels = [t[1] for t in valid_data]
+    print(f"Train set is length: {len(train)}")
+    print(f"Validation set is length: {len(valid)}")
     return train, train_labels, valid, valid_labels
 
 def get_train_subset(length, x, x_labels, train_lengths, num_sample=100, subset_size=10000, seed=10):
