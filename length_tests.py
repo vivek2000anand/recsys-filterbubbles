@@ -23,7 +23,7 @@ from sklearn.utils import shuffle
 from copy import deepcopy
 import time
 
-OUTPUT_SIZE = 5673
+OUTPUT_SIZE = 3312
 NUM_TRAIN_SAMPLES = 100
 NUM_VAL_SAMPLES = 10
 NUM_REPETITIONS = 20
@@ -31,7 +31,7 @@ STEP_SIZE = 5
 
 def get_checkpoints():
     curr_dir = os.getcwd()
-    path = curr_dir + "/checkpoints/"
+    path = curr_dir + "/checkpoint_subsets/"
     checkpoints = []
     with os.scandir(path) as listOfEntries:
         for entry in listOfEntries:
@@ -60,7 +60,7 @@ def get_train_validation():
 def get_train_subset(length, x, x_labels, train_lengths):
     x_subset =[]
     x_labels_subset = []
-    for i in range(len(valid)):
+    for i in range(len(x)):
         if train_lengths[i] == length:
             x_subset.append(x[i])
             x_labels_subset.append(x_labels[i])
