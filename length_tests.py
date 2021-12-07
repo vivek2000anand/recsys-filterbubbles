@@ -28,6 +28,7 @@ NUM_TRAIN_SAMPLES = 200
 NUM_VAL_SAMPLES = 100
 NUM_REPETITIONS = 30
 STEP_SIZE = 1
+BATCH_SIZE = 4096
 
 def get_checkpoints():
     curr_dir = os.getcwd()
@@ -114,7 +115,7 @@ for h in range(NUM_REPETITIONS):
             print("About to cartesian product")
             sources, source_labels, targets, target_labels = get_points(train, train_labels, valid, valid_labels, x_num_sample=NUM_TRAIN_SAMPLES, y_num_sample=NUM_VAL_SAMPLES, seed=h)
             print("About to tracin")
-            influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=4000, num_items=OUTPUT_SIZE, device=device)
+            influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=BATCH_SIZE, num_items=OUTPUT_SIZE, device=device)
             influences[i]= influences[i].append(influence)
             end_length_time = time.time()
             print(f"Influence for length {i} is : {influence} \nTime elapsed {end_length_time-start_length_time}")
