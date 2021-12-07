@@ -151,7 +151,7 @@ for combo in combos:
     # for key, val in influences.items():
     #     influences[key] =[float(v) for v in val]
 
-    influences = [float(i) for i in influence]
+    influences = [float(i) for i in influences]
 
     file_name = "train_"+ TRAIN_NAME + "_test_" + TEST_NAME +".pkl" 
 
