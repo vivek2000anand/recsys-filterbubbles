@@ -26,7 +26,7 @@ OUTPUT_SIZE = 3312
 
 def get_checkpoints():
     curr_dir = os.getcwd()
-    path = curr_dir + "/checkpoints_subset/"
+    path = curr_dir + "/checkpoints_subsets/"
     checkpoints = []
     with os.scandir(path) as listOfEntries:
         for entry in listOfEntries:
@@ -98,4 +98,4 @@ for i in range(50):
     else:
         influences.append(-1)
 
-print(influences)
+print(f"Influences are \n{influences}")
