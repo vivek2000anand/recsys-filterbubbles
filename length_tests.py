@@ -84,10 +84,10 @@ def get_points(x, x_label, y, y_label,x_num_sample =100, y_num_sample=10, seed=6
     x, x_label = x[:x_num_sample], x_label[:x_num_sample]
     y, y_label = y[:y_num_sample], y_label[:y_num_sample]
     combos = list(product(zip(x, x_label), zip(y, y_label)))
-    sources = [x[0][0] for c in combos]
-    source_labels = [x[0][1] for c in combos]
-    targets = [y[1][0] for c in combos]
-    target_labels = [y[1][1] for c in combos]
+    sources = [c[0][0] for c in combos]
+    source_labels = [c[0][1] for c in combos]
+    targets = [c[1][0] for c in combos]
+    target_labels = [c[1][1] for c in combos]
     print(f"Number of datapoints {len(sources)}")
     return sources, source_labels, targets, target_labels
 
@@ -101,13 +101,13 @@ checkpoints = get_checkpoints()
 train, train_labels, valid, valid_labels = get_train_validation()
 train_lengths = [get_length(i) for i in train]
 
-influences = {i:[] for i in range(1,50,STEP_SIZE)}
+influences = {i:[] for i in range(0,50,STEP_SIZE)}
 start_time = time.time()
 print("About to start running")
 for h in range(NUM_REPETITIONS):
     outer_start_time = time.time()
     print(f"Starting outer loop with {h}")
-    for i in range(1, 50, STEP_SIZE):
+    for i in range(0, 50, STEP_SIZE):
         start_length_time = time.time()
         train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths)
         if len(train_subset) != 0:
