@@ -114,7 +114,7 @@ def get_points(x, x_label, y, y_label,x_num_sample =100, y_num_sample=10, seed=6
     return sources, source_labels, targets, target_labels
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]='3'
+os.environ["CUDA_VISIBLE_DEVICES"]='2'
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("device is ", device)
