@@ -31,7 +31,7 @@ STEP_SIZE = 5
 
 def get_checkpoints():
     curr_dir = os.getcwd()
-    path = curr_dir + "/checkpoint_subsets/"
+    path = curr_dir + "/checkpoints/"
     checkpoints = []
     with os.scandir(path) as listOfEntries:
         for entry in listOfEntries:
