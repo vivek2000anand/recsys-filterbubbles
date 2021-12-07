@@ -86,6 +86,7 @@ valid_lengths = [get_length(i) for i in valid]
 
 influences = []
 start_time = time.time()
+print("About to start running")
 for i in range(50):
     start_length_time = time.time()
     valid_subset, valid_labels_subset = get_valid_subset(i, valid, valid_labels, valid_lengths)
