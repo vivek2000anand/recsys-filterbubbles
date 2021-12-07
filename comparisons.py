@@ -96,8 +96,10 @@ def get_length(data_point):
 def get_points(x, x_label, y, y_label,x_num_sample =100, y_num_sample=10, seed=69):
     x, x_label = shuffle(x, x_label, random_state= seed)
     y, y_label = shuffle(y, y_label, random_state=seed)
-    x, x_label = x[:x_num_sample], x_label[:x_num_sample]
-    y, y_label = y[:y_num_sample], y_label[:y_num_sample]
+    if len(x) > x_num_sample:
+        x, x_label = x[:x_num_sample], x_label[:x_num_sample]
+    if len(y) > y_num_sample:
+        y, y_label = y[:y_num_sample], y_label[:y_num_sample]
     combos = list(product(zip(x, x_label), zip(y, y_label)))
     sources = [c[0][0] for c in combos]
     source_labels = [c[0][1] for c in combos]
