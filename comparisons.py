@@ -25,7 +25,7 @@ import time
 
 OUTPUT_SIZE = 3312
 NUM_TRAIN_SAMPLES = 100
-NUM_VAL_SAMPLES = 20
+NUM_VAL_SAMPLES = 100
 NUM_REPETITIONS = 20
 STEP_SIZE = 2
 BATCH_SIZE = 4096
@@ -160,7 +160,7 @@ for combo in combos:
 
     influences = [float(i) for i in influences]
 
-    file_name = "train_"+ TRAIN_NAME + "_test_" + TEST_NAME +".pkl" 
+    file_name = "train_"+ TRAIN_NAME + "_test_" + TEST_NAME +"_100_100.pkl" 
 
     with open(file_name, 'wb') as f:
         pickle.dump(influences, f)
