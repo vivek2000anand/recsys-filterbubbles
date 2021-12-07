@@ -160,7 +160,7 @@ for combo in combos:
 
     influences = [float(i) for i in influences]
 
-    file_name = "train_"+ TRAIN_NAME + "_test_" + TEST_NAME +"_100_100.pkl" 
+    file_name = "train_"+ TRAIN_NAME + "_test_" + TEST_NAME +".pkl" 
 
     with open(file_name, 'wb') as f:
         pickle.dump(influences, f)
