@@ -26,7 +26,7 @@ OUTPUT_SIZE = 3312
 
 def get_checkpoints():
     curr_dir = os.getcwd()
-    path = curr_dir + "/checkpoints_subsets/"
+    path = curr_dir + "/checkpoint_subsets/"
     checkpoints = []
     with os.scandir(path) as listOfEntries:
         for entry in listOfEntries:
