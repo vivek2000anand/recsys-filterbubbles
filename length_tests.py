@@ -26,7 +26,7 @@ import time
 OUTPUT_SIZE = 3312
 NUM_TRAIN_SAMPLES = 100
 NUM_REPETITIONS = 20
-NUM_SUBSET = 10000
+NUM_SUBSET = 1000
 STEP_SIZE = 5
 
 def get_checkpoints():
@@ -106,7 +106,8 @@ for h in range(NUM_REPETITIONS):
         train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths, num_sample=NUM_TRAIN_SAMPLES, seed=h)
         if len(train_subset) != 0:
             print("About to cartesian product")
-            sources, source_labels, targets, target_labels = get_points(valid, valid_labels, train, train_labels)
+            sources, source_labels, targets, target_labels = get_points(train, train_labels, valid, valid_labels)
+            print("About to tracin")
             influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=4000, num_items=OUTPUT_SIZE, device=device)
             influences[i]= influences[i].append(influence)
             end_length_time = time.time()
