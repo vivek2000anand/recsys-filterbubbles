@@ -24,13 +24,14 @@ from copy import deepcopy
 import time
 
 OUTPUT_SIZE = 3312
-NUM_TRAIN_SAMPLES = 20
+NUM_TRAIN_SAMPLES = 100
 NUM_VAL_SAMPLES = 20
 NUM_REPETITIONS = 20
 STEP_SIZE = 2
 BATCH_SIZE = 4096
-TRAIN_NAME = "filter"
-TEST_NAME = "breaking"
+train_names = ["filter", "breaking", "diverse"]
+test_names = ["breaking", "filter"]
+
 
 def get_checkpoints():
     curr_dir = os.getcwd()
@@ -47,6 +48,8 @@ def get_checkpoints():
 def get_train_validation(train_dataset, valid_dataset):
     cwd = os.getcwd()
     test_path = cwd + "/data/test.data"
+    print(f'Train Dataset {train_dataset}')
+    print(f"Valid dataset {valid_dataset}")
     if train_dataset == "filter":
         train_path = cwd + "/data/train_pts_filter_bubble.data"
     elif train_dataset == "diverse":
@@ -110,40 +113,49 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("device is ", device)
 
 checkpoints = get_checkpoints()
-train, train_labels, valid, valid_labels = get_train_validation(train_dataset=TRAIN_NAME, valid_dataset=TEST_NAME)
-train_lengths = [get_length(i) for i in train]
 
-influences = {i:[] for i in range(0,50,STEP_SIZE)}
-start_time = time.time()
-print("About to start running")
-for h in range(NUM_REPETITIONS):
-    outer_start_time = time.time()
-    print(f"Starting outer loop with {h}")
-    for i in range(0, 50, STEP_SIZE):
+combos = list(product(train_names, test_names))
+
+for combo in combos:
+    TRAIN_NAME = combo[0]
+    TEST_NAME = combo[1]
+    train, train_labels, valid, valid_labels = get_train_validation(train_dataset=TRAIN_NAME, valid_dataset=TEST_NAME)
+    train_lengths = [get_length(i) for i in train]
+
+    train_copy = deepcopy(train)
+    train_labels_copy = deepcopy(train_labels)
+
+    influences = []
+    start_time = time.time()
+    print("About to start running")
+    for h in range(NUM_REPETITIONS):
+        print(f"Starting outer loop with {h}")
         start_length_time = time.time()
-        train_subset, train_labels_subset = get_train_subset(i, train, train_labels, train_lengths)
-        if len(train_subset) != 0:
+        if len(train_copy) != 0:
             print("About to cartesian product")
-            sources, source_labels, targets, target_labels = get_points(train_subset, train_labels_subset, valid, valid_labels, x_num_sample=NUM_TRAIN_SAMPLES, y_num_sample=NUM_VAL_SAMPLES, seed=h)
+            sources, source_labels, targets, target_labels = get_points(train_copy, train_labels_copy, valid, valid_labels, x_num_sample=NUM_TRAIN_SAMPLES, y_num_sample=NUM_VAL_SAMPLES, seed=h)
             print("About to tracin")
             influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=BATCH_SIZE, num_items=OUTPUT_SIZE, device=device)
-            influences[i].append(influence)
+            influences.append(influence)
             end_length_time = time.time()
-            print(f"Influence for length {i} is : {influence} \nTime elapsed {end_length_time-start_length_time}")
+            print(f"Influence is : {influence} \nTime elapsed {end_length_time-start_length_time}")
         else:
-            influences[i].append(-1)
-    outer_end_time = time.time()
-    print(f"Outer Iteration {h} has ended with {outer_end_time-outer_start_time} time taken")
-    print("_______________________________________________________________________________")
+            influences.append(-1)
+        outer_end_time = time.time()
 
-print(f"Influences are \n{influences}")
+        print("_______________________________________________________________________________")
 
-
-for key, val in influences.items():
-    influences[key] =[float(v) for v in val]
+    print(f"Influences are \n{influences}")
 
 
-file_name = "train_"+ TRAIN_NAME + "_test_" + TEST_NAME +".pkl" 
+    # for key, val in influences.items():
+    #     influences[key] =[float(v) for v in val]
 
-with open(file_name, 'wb') as f:
-    pickle.dump(influences, f)
+    influences = [float(i) for i in influence]
+
+    file_name = "train_"+ TRAIN_NAME + "_test_" + TEST_NAME +".pkl" 
+
+    with open(file_name, 'wb') as f:
+        pickle.dump(influences, f)
+    print(f"DONE WITH A COMBO {TRAIN_NAME} {TEST_NAME}")
+    print("__________________________________________________________________________________")
