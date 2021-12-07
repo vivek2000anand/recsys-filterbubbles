@@ -25,9 +25,9 @@ import time
 
 OUTPUT_SIZE = 3312
 NUM_TRAIN_SAMPLES = 100
-NUM_VAL_SAMPLES = 10
+NUM_VAL_SAMPLES = 100
 NUM_REPETITIONS = 20
-STEP_SIZE = 5
+STEP_SIZE = 1
 
 def get_checkpoints():
     curr_dir = os.getcwd()
