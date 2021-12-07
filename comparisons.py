@@ -94,21 +94,23 @@ def get_length(data_point):
 
 
 def get_points(x, x_label, y, y_label,x_num_sample =100, y_num_sample=10, seed=69):
-    print(f"length of x is {len(x)}, {len(x_label)}")
-    print(f"length of y is {len(y)}, {len(y_label)}")
+    # print(f"length of x is {len(x)}, {len(x_label)}")
+    # print(f"length of y is {len(y)}, {len(y_label)}")
     x, x_label = shuffle(x, x_label, random_state= seed)
     y, y_label = shuffle(y, y_label, random_state=seed)
     if len(x) > x_num_sample:
+        # print("In x if")
         x, x_label = x[:x_num_sample], x_label[:x_num_sample]
     if len(y) > y_num_sample:
+        # print("in y if")
         y, y_label = y[:y_num_sample], y_label[:y_num_sample]
     combos = list(product(zip(x, x_label), zip(y, y_label)))
-    print(f"Length of combos is {len(combos)}")
+    # print(f"Length of combos is {len(combos)}")
     sources = [c[0][0] for c in combos]
     source_labels = [c[0][1] for c in combos]
     targets = [c[1][0] for c in combos]
     target_labels = [c[1][1] for c in combos]
-    print(f"Number of datapoints {len(sources)}")
+    # print(f"Number of datapoints {len(sources)}")
     return sources, source_labels, targets, target_labels
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
@@ -140,7 +142,7 @@ for combo in combos:
             print("About to cartesian product")
             sources, source_labels, targets, target_labels = get_points(train_copy, train_labels_copy, valid, valid_labels, x_num_sample=NUM_TRAIN_SAMPLES, y_num_sample=NUM_VAL_SAMPLES, seed=h)
             print("About to tracin")
-            influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=train_labels, optimizer="SGD", paths=checkpoints, batch_size=BATCH_SIZE, num_items=OUTPUT_SIZE, device=device)
+            influence = approximate_tracin_batched(LSTM, sources=sources, targets=targets, source_labels=source_labels, target_labels=target_labels, optimizer="SGD", paths=checkpoints, batch_size=BATCH_SIZE, num_items=OUTPUT_SIZE, device=device)
             influences.append(influence)
             end_length_time = time.time()
             print(f"Influence is : {influence} \nTime elapsed {end_length_time-start_length_time}")
