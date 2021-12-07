@@ -8,6 +8,7 @@ from collections import Counter, defaultdict
 import pickle
 import numpy as np
 import math
+from functools import cache
 
 
 def printl(length=80):
@@ -196,6 +197,7 @@ def num_unique(communities, *args, **kwargs):
     """Returns the number of unique communities"""
     return len(set(communities))
 
+# @cache
 def shannon_index(communities, community_dict):
     """This is a metric of intra-list diversity https://en.wikipedia.org/wiki/Diversity_index#Shannon_index"""
     richness = len(set(community_dict.values()))
@@ -209,7 +211,7 @@ def shannon_index(communities, community_dict):
             ans += 0
     return -ans
 
-def simpson_index(communities, community_dict):
+def _simpson_index(communities, community_dict):
     """Gives more weight to dominant topics
     
     The original Simpson index λ equals the probability that two entities taken 
@@ -224,6 +226,7 @@ def simpson_index(communities, community_dict):
         else:
             ans += 0
     return ans
-                   
+
+# @cache        
 def gini_simpson_index(communities, community_dict):
-    return 1 - simpson_index(communities, community_dict)
+    return 1 - _simpson_index(communities, community_dict)
