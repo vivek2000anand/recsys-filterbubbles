@@ -123,7 +123,7 @@ def sequence_generator(data, look_back=50):
 
     return train, valid, test
 
-def reindex_and_save_communities(train_data, valid_data, test_data, original_df):
+def reindex_and_save_communities(train_data, valid_data, test_data, original_df, item_key='streamer_name', community_key='community'):
     """Fills in gaps between item ids to match the LSTM indices, saves a community dict using the original df
     
     NOTE: The data has already been incremented by 1 from the sequence_generator due to 0 padding
@@ -157,7 +157,7 @@ def reindex_and_save_communities(train_data, valid_data, test_data, original_df)
 
     ### 3. COMPUTE REINDEXED ITEMS TO COMMUNITY
     lstm_idx_to_community = {}
-    df = original_df.groupby(['streamer_name', 'community'], as_index=False).size()
+    df = original_df.groupby([item_key, community_key], as_index=False).size()
     df_item_to_community = dict(zip(df.streamer_name, df.community))
     for lstm_idx, df_item in lstm_idx_to_df_item.items():
         lstm_idx_to_community[lstm_idx] = df_item_to_community[df_item]

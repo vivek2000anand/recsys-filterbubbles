@@ -10,18 +10,20 @@ from LSTM_clean.utils import filter_and_split_data, printl, reindex_and_save_com
 ###################
 ### CONFIG
 # TODO: User should init these values
+LOAD_NAME = "twitch104k.csv"
 LOAD_FOLDER = "/raid/home/myang349/recsys-filterbubbles/data/"
-LOAD_NAME = "twitch100k.csv"
 SAVE_FOLDER = "/raid/home/myang349/recsys-filterbubbles/data/twitch_sequence/"
 
-
-SAVE_TRAIN_NAME = "train.data"
-SAVE_VALID_NAME = "valid.data"
-SAVE_TEST_NAME = "test.data"
-SAVE_COMMUNITY_NAME = "lstm_idx_communities.data"
+# Use SAVE_PREFIX to mark different datasets
+SAVE_PREFIX = "104k"
+SAVE_TRAIN_NAME = SAVE_PREFIX + "train.data"
+SAVE_VALID_NAME = SAVE_PREFIX + "valid.data"
+SAVE_TEST_NAME = SAVE_PREFIX + "test.data"
+SAVE_COMMUNITY_NAME = SAVE_PREFIX + "lstm_idx_communities.data"
 USER_KEY = "user_id"
 ITEM_KEY = "streamer_name"
 TIME_KEY = "stop_time"
+COMMUNITY_KEY = "community"
 LOOK_BACK = 50
 
 
@@ -50,7 +52,7 @@ print(f"# of Test Points: {len(test)}")
 
 ### 4. Manipulate train, valid ,test
 print(f"\nRe-indexing to fill in gaps")
-lstm_idx_to_community, unique_items, item_to_lstm_idx, lstm_idx_to_df_item = reindex_and_save_communities(train, valid, test, df)
+lstm_idx_to_community, unique_items, item_to_lstm_idx, lstm_idx_to_df_item = reindex_and_save_communities(train, valid, test, df, ITEM_KEY, COMMUNITY_KEY)
 print(f"Max item id in df: {max(lstm_idx_to_df_item.values())}")
 print(f"Max itemid in data (before re-indexing): {max(item_to_lstm_idx.keys())}")
 print(f"Max itemid in data (after re-indexing): {max(lstm_idx_to_df_item.keys())}")
