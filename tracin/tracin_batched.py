@@ -87,6 +87,7 @@ def approximate_tracin_batched(model, sources, source_labels, targets, target_la
             output, hidden = curr_model.forward(torch.stack([sources_emb[i] for i in range(st_idx,ed_idx)],dim=0).detach())
             print("output shape ", output.shape)
             print(f"st_idx {st_idx} ed_idx {ed_idx}")
+            print(f"source labels {source_labels[st_idx:ed_idx].shape}")
             loss = criterion(output, source_labels[st_idx:ed_idx])
             loss.backward()
             source_gradients = curr_model.get_gradients(device)
