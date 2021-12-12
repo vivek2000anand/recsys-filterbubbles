@@ -7,7 +7,7 @@ from copy import deepcopy
 
 from LSTM_clean.model import LSTM
 
-## For now: Just cahnge SAVE_RPEFIX, EPOCHS, and OUTPUT SIZE
+## For now: Just change SAVE_RPEFIX, EPOCHS, and OUTPUT SIZE
 
 # Data Location
 SAVE_FOLDER = "/raid/home/myang349/recsys-filterbubbles/data/twitch_sequence/"
@@ -18,7 +18,7 @@ SAVE_VALID_NAME = SAVE_PREFIX + "valid.data"
 SAVE_TEST_NAME = SAVE_PREFIX + "test.data"
 
 # Configuration for MODEL
-EPOCHS = 600
+EPOCHS = 200
 # Should be # of unique items in data + 1 for the 0 item
 # This is the same as max itemid in re-indexed + 1 for the 0 item
 # OUTPUT_SIZE = 5400
@@ -45,10 +45,37 @@ def train_model():
     print("Model is ", model)
 
     print("\nTraining and testing")
-    model.traintest(train=train_data,test=valid_data, epochs=EPOCHS, learning_rate=LEARNING_RATE, momentum=MOMENTUM)
+    _, train_losses, test_losses, test_mrr, test_hits = model.traintest(train=train_data,test=valid_data, epochs=EPOCHS, learning_rate=LEARNING_RATE, momentum=MOMENTUM)
     print("\nFinished!")
 
-    return model
+    return model, train_losses, test_losses, test_mrr, test_hits
+
+def train_model2(train_data, valid_data):
+    train_data = deepcopy(train_data)
+    valid_data = deepcopy(valid_data)
+    # Setting Cuda
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("Device is", device)
+
+    # The format is:
+    # N x 2 x (sequence, 
+    # train_data = np.load(os.path.join(SAVE_FOLDER, SAVE_TRAIN_NAME), allow_pickle=True)
+    # valid_data = np.load(os.path.join(SAVE_FOLDER, SAVE_VALID_NAME), allow_pickle=True)
+    # test_data = np.load(os.path.join(SAVE_FOLDER, SAVE_TEST_NAME), allow_pickle=True)
+
+    print(f"Train: {len(train_data)}, Valid: {len(valid_data)}")
+
+    # Output size should be # of unique items in data + 1 for the 0 item
+    model = LSTM(input_size=128, output_size=OUTPUT_SIZE, hidden_dim=64, n_layers=1, device=device).to(device)
+    model.LSTM.flatten_parameters()
+    print("Model is ", model)
+
+    print("\nTraining and testing")
+    _, train_losses, test_losses, test_mrr, test_hits = model.traintest(train=train_data,test=valid_data, epochs=EPOCHS, learning_rate=LEARNING_RATE, momentum=MOMENTUM)
+    print("\nFinished!")
+
+    return model, train_losses, test_losses, test_mrr, test_hits
+
 
 def get_topk_predictions(model, data, k):
     data = deepcopy(data)

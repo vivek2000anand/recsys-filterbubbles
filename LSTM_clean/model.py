@@ -144,6 +144,12 @@ class LSTM(nn.Module):
         optimizer = optim.SGD(self.parameters(), lr=learning_rate, momentum=momentum)
 
         start_time = time.time()
+
+
+        train_losses = []
+        test_losses = []
+        test_hits = []
+        test_mrr = []
         for epoch in range(0, epochs + 1):
             train_loss = 0
             for iteration in range(int(train_num / self.batch_size) + 1):
@@ -178,6 +184,12 @@ class LSTM(nn.Module):
                         time.time() - start_time,
                     )
                 )
+                # NOTE: append return values
+                train_losses.append(train_loss / train_num)
+                test_losses.append(test_loss)
+                test_mrr.append(test_MRR)
+                test_hits.append(test_HITS)
+
                 start_time = time.time()
             if epoch % 10 == 0:
                 path = os.getcwd()
@@ -185,4 +197,5 @@ class LSTM(nn.Module):
                 print(f"saving checkpoint to {fname}")
                 save_tracin_checkpoint(self, epoch, train_loss, optimizer, fname)
 
-        return test_prediction
+
+        return test_prediction, train_losses, test_losses, test_mrr, test_hits
